@@ -1,0 +1,24 @@
+.mo-data__options {
+    position: absolute;
+    top: 80px;
+    left: var(--padding-start);
+    z-index: 10;
+    width: calc(100% - var(--padding-start) - var(--padding-end));
+    background: var(--ion-item-background, var(--ion-background-color, #fff));
+    padding: 10px;
+    -webkit-padding-start: var(--padding-start);
+    padding-inline-start: var(--padding-start);
+    -webkit-padding-end: var(--padding-end);
+    padding-inline-end: var(--padding-end);
+    box-shadow: 0 4px 4px 0px rgb(0 0 0 / 15%);
+}
+
+.mo-do__item {
+    padding: 5px 0;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}

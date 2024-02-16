@@ -1,3 +1,93 @@
-<p>
-  order works!
-</p>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Заказ №{{order.id}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-nav-link routerLink="/orders/edit" [queryParams]="{id: order.id}">
+        <ion-button>
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+      </ion-nav-link>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">Заказ №{{order.id}}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              Дата
+            </ion-label>
+            <ion-label>
+              {{ order.date | date: 'dd.MM.yyyy HH:mm' }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Клиент
+            </ion-label>
+            <ion-label>
+              {{ order.client }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Товары</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item *ngFor="let product of order.products">
+            <ion-label>
+              <h2>{{ product.title }}</h2>
+              <p>{{ product.price }}смн x {{ product.packCount }}</p>
+            </ion-label>
+            <ion-label slot="end" class="ion-text-end">
+              {{ product.price * product.packCount }}смн
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Итого</h2>
+            </ion-label>
+            <ion-label slot="end" class="ion-text-end">
+              {{ order.sum }}смн
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <h4 class="">Комментарий</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              {{ order.comment }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

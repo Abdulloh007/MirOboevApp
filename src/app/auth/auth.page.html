@@ -1,13 +1,26 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>auth</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding" [fullscreen]="true">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">auth</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid class="auth__container">
+    <ion-row>
+      <ion-col size="12">
+        <h1 class="page__title">Авторизация</h1>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Логин</ion-label>
+            <ion-input type="text" autofocus="true" [(ngModel)]="login"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Пароль</ion-label>
+            <ion-input type="password" [(ngModel)]="password"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-button class="auth__btn" expand="block" (click)="loginUser()">Войти</ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

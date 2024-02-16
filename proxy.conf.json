@@ -1,0 +1,7 @@
+{
+  "/miroboev2024/hs/api": {
+    "target": "http://localhost",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

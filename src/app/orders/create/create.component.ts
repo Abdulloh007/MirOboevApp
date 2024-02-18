@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IonModal } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonModal, ToastController } from '@ionic/angular';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
 
 interface Order {
+  id: number | string;
   link: string;
   date: string | Date;
   comment: string;
@@ -32,6 +33,7 @@ export class CreateComponent implements OnInit {
   modalButton: string = 'Добавить';
 
   order: Order = {
+    id: 0,
     link: 'Новый Заказ',
     date: new Date(),
     comment: '',
@@ -52,20 +54,20 @@ export class CreateComponent implements OnInit {
   constructor(
     private orderService: OrdersService,
     private productsService: ProductsService,
-    private route: ActivatedRoute
+    private toastController: ToastController,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: any) => {      
-      if (params.id === 0 || params.id === '0') {
+    this.route.queryParams.subscribe((params: any) => {   
+      if (params.id !== undefined && (params.id === 0 || params.id === '0')) {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
-      }else if (params.id) {
+      }else if (params.id !== undefined) {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
         });
-        this.order.link = "Редактировать заказ";
       }
-      
     });
     this.autoSaveOnLocalStorage();
   }
@@ -76,22 +78,23 @@ export class CreateComponent implements OnInit {
   }
 
   confirm() { 
-    if (this.modalAction === 'add') {
+    let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
+    if (processedProd) {
+      console.log(processedProd);
+      console.log(this.order.products);
+      this.order.sum -= processedProd.total;
+      this.countProductTotal();  
+      processedProd.price = this.newProduct.price;
+      processedProd.packCount = this.newProduct.packCount;
+      processedProd.total = this.newProduct.total;
+      console.log(processedProd);
+      console.log(this.order.products);
+      this.order.sum = this.order.sum + processedProd.total;
+      console.log(this.order.sum);
+    }else {
       this.countProductTotal();   
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
-    } else if (this.modalAction === 'edit') {
-      let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
-      console.log(processedProd);
-      if (processedProd) {
-        this.order.sum -= processedProd.total;
-        this.countProductTotal();  
-        processedProd = this.newProduct;
-        console.log(processedProd);
-        this.order.sum = this.order.sum + processedProd.total;
-        console.log(this.order.sum);
-        
-      }
     }
     this.newProduct = {
       title: '',
@@ -121,12 +124,13 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  prepareAction(action: string) {
+  prepareAction(action: string, product?: Product) {
     this.modalAction = action;
     if (action === 'edit') {
       this.modalAction = 'edit';
       this.modalTitle = 'Изменить товар';
       this.modalButton = 'Изменить';
+      this.newProduct = Object.assign({}, this.order.products.find(item => item.title === product?.title)) || this.newProduct;
     } else {
       this.modalAction = 'add';
       this.modalTitle = 'Добавить товар';
@@ -145,8 +149,24 @@ export class CreateComponent implements OnInit {
 
   saveOrder() {
     this.orderService.createOrder(this.order).subscribe((res: any) => {
-      console.log(res);
+      this.router.navigate(['/orders']);
+      localStorage.removeItem('orderDraft');
+      this.presentToast('Заказ успешно сохранен');
     });
   }
+  
+  printOrder() {
+    this.orderService.getOrderForm(this.order.id).subscribe((res: any) => {
+    })
+  }
 
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,
+      position: 'top',
+    });
+
+    await toast.present();
+  }
 }

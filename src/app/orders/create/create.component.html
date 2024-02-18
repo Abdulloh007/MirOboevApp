@@ -25,7 +25,7 @@
       <ion-col size="12">
         <ion-list>
           <ion-item *ngFor="let product of order.products"
-            (click)="prepareAction('edit'); modal.isOpen = true; newProduct = product">
+            (click)="prepareAction('edit', product); modal.isOpen = true">
             <ion-label>
               <h2>{{ product.title }}</h2>
               <p>{{ product.price }}смн x {{ product.packCount }}</p>
@@ -65,7 +65,18 @@
           </ion-item>
         </ion-list>
       </ion-col>
-
+      <ion-col size="6">
+        <ion-button (click)="saveOrder()" [disabled]="order.products.length === 0" expand="block">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Записать
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="printOrder()" [disabled]="order.products.length === 0" color="dark" expand="block">
+          <ion-icon slot="start" name="print-outline"></ion-icon>
+          Печать
+        </ion-button>
+      </ion-col>
     </ion-row>
   </ion-grid>
 
@@ -92,11 +103,11 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Количество</ion-label>
-            <ion-input (input)="countProductTotal()" type="number" [(ngModel)]="newProduct.packCount"></ion-input>
+            <ion-input (input)="countProductTotal()" [clearOnEdit]="true" type="number" [(ngModel)]="newProduct.packCount"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Цена</ion-label>
-            <ion-input (input)="countProductTotal()" type="number" [(ngModel)]="newProduct.price"></ion-input>
+            <ion-input (input)="countProductTotal()" type="number" [clearOnEdit]="true" [(ngModel)]="newProduct.price"></ion-input>
           </ion-item>
           <ion-item lines="none">
             <ion-label>

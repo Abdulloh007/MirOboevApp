@@ -10,6 +10,9 @@
           <ion-icon name="create-outline"></ion-icon>
         </ion-button>
       </ion-nav-link>
+      <ion-button (clik)="printOrder()">
+        <ion-icon name="print-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -90,4 +93,7 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <pdf-viewer [src]="pdfUrl" [render-text]="true" style="display: block;"></pdf-viewer>
+
 </ion-content>

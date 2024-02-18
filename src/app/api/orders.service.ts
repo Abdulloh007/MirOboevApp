@@ -35,6 +35,15 @@ export class OrdersService {
     return this.http.post(environment.api + '/clients-orders', JSON.stringify(order), {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
+  getOrderForm(id: string | number) {
+    return this.http.get(environment.api + '/get_order_document/' + id, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
         'Authorization': 'Basic ' + localStorage.getItem('token')
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
 import { OrdersService } from 'src/app/api/orders.service';
@@ -28,6 +28,7 @@ interface Product {
 
 export class CreateComponent implements OnInit {
   @ViewChild(IonModal) modal !: IonModal;
+  @ViewChild('contextmenu') contextMenu !: ElementRef;
   modalAction: string = 'add';
   modalTitle: string = 'Добавить товар';
   modalButton: string = 'Добавить';
@@ -50,6 +51,13 @@ export class CreateComponent implements OnInit {
   };
 
   searchResult: string[] = [];
+  activeProduct: string = '';
+  isModalOpen: boolean = false;
+  modalAddonTitle: string = '';
+  productBalance: any[] = [];
+  isAlertOpen: boolean = false;
+  alertMessage: string = '';
+
 
   constructor(
     private orderService: OrdersService,
@@ -60,16 +68,22 @@ export class CreateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: any) => {   
+    this.route.queryParams.subscribe((params: any) => {
       if (params.id !== undefined && (params.id === 0 || params.id === '0')) {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
-      }else if (params.id !== undefined) {
+      } else if (params.id !== undefined) {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
         });
       }
     });
     this.autoSaveOnLocalStorage();
+    window.addEventListener('click', (event) => {
+      if (event.target !== this.contextMenu.nativeElement && this.contextMenu.nativeElement.classList.contains('active')) {
+        this.contextMenu.nativeElement.classList.remove('active');
+        this.activeProduct = '';
+      }
+    });
   }
 
   cancel() {
@@ -77,13 +91,13 @@ export class CreateComponent implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  confirm() { 
+  confirm() {
     let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
     if (processedProd) {
       console.log(processedProd);
       console.log(this.order.products);
       this.order.sum -= processedProd.total;
-      this.countProductTotal();  
+      this.countProductTotal();
       processedProd.price = this.newProduct.price;
       processedProd.packCount = this.newProduct.packCount;
       processedProd.total = this.newProduct.total;
@@ -91,8 +105,8 @@ export class CreateComponent implements OnInit {
       console.log(this.order.products);
       this.order.sum = this.order.sum + processedProd.total;
       console.log(this.order.sum);
-    }else {
-      this.countProductTotal();   
+    } else {
+      this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
     }
@@ -148,13 +162,16 @@ export class CreateComponent implements OnInit {
   }
 
   saveOrder() {
+    this.presentToast('Сохранение заказа...');
     this.orderService.createOrder(this.order).subscribe((res: any) => {
-      this.router.navigate(['/orders']);
+      this.router.navigate(['/orders']).then(() => {
+        window.location.reload();
+      });
       localStorage.removeItem('orderDraft');
       this.presentToast('Заказ успешно сохранен');
     });
   }
-  
+
   printOrder() {
     this.orderService.getOrderForm(this.order.id).subscribe((res: any) => {
     })
@@ -168,5 +185,44 @@ export class CreateComponent implements OnInit {
     });
 
     await toast.present();
+  }
+
+  contexMenu(event: any, title: string) {
+    event?.preventDefault();
+    this.contextMenu.nativeElement.classList.add('active');
+    if (window.innerWidth - event.clientX < 200) {
+      this.contextMenu.nativeElement.style.left = event.clientX - 200 + 'px';
+    } else {
+      this.contextMenu.nativeElement.style.left = event.clientX + 'px';
+    }
+    this.contextMenu.nativeElement.style.top = event.clientY + 'px';
+    this.activeProduct = title;
+  }
+
+  findOutPrice() {
+    this.productsService.findOutPrice(this.activeProduct).subscribe((res: any) => {
+      this.setOpenAlert(true);
+      this.alertMessage = '';
+      res.forEach((item: any) => {
+        this.alertMessage += `${item.priceType}: ${item.price} ${item.priceCurrency} \n`;
+      });
+    });
+  }
+
+  findOutBalance() {
+    this.modalAddonTitle = this.activeProduct;
+    this.productsService.findOutBalance(this.activeProduct).subscribe((res: any) => {
+      this.setOpen(true);
+      
+      this.productBalance = res;
+    });
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
+
+  setOpenAlert(isOpen: boolean) {
+    this.isAlertOpen = isOpen;
   }
 }

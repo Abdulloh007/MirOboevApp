@@ -1,30 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button default-href=""></ion-back-button>
+      <ion-back-button default-href="#"></ion-back-button>
     </ion-buttons>
     <ion-title>{{order.link}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <ion-title size="large">{{order.link}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-grid>
     <ion-row>
       <ion-col size="12">
         <h4 class="">Товары</h4>
       </ion-col>
       <ion-col size="12">
+        
         <ion-list>
-          <ion-item *ngFor="let product of order.products"
+          <ion-item (contextmenu)="contexMenu($event, product.title)" *ngFor="let product of order.products"
             (click)="prepareAction('edit', product); modal.isOpen = true">
             <ion-label>
               <h2>{{ product.title }}</h2>
@@ -37,6 +29,7 @@
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-item>
+          
           <ion-item>
             <ion-label>
               <ion-button (click)="prepareAction('add'); modal.isOpen = true" slot="center" fill="clear">
@@ -65,30 +58,28 @@
           </ion-item>
         </ion-list>
       </ion-col>
-      <ion-col size="6">
+      <ion-col size="6" offset="3">
         <ion-button (click)="saveOrder()" [disabled]="order.products.length === 0" expand="block">
           <ion-icon slot="start" name="save-outline"></ion-icon>
           Записать
         </ion-button>
       </ion-col>
-      <ion-col size="6">
-        <ion-button (click)="printOrder()" [disabled]="order.products.length === 0" color="dark" expand="block">
-          <ion-icon slot="start" name="print-outline"></ion-icon>
-          Печать
-        </ion-button>
-      </ion-col>
     </ion-row>
   </ion-grid>
+  
+  <div class="mo-contextmenu" #contextmenu>
+    <ion-button (click)="findOutPrice()" fill="clear">Узнать цену</ion-button>
+    <ion-button (click)="findOutBalance()" fill="clear">Узнать остаток</ion-button>
+  </div>
 
-
-  <ion-modal trigger="open-modal">
+  <ion-modal>
     <ng-template>
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
             <ion-button (click)="cancel()">Отмена</ion-button>
           </ion-buttons>
-          <ion-title>Добавить товар</ion-title>
+          <ion-title>{{modalTitle}}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="confirm()" [strong]="true">Далее</ion-button>
           </ion-buttons>
@@ -126,4 +117,41 @@
     </ng-template>
   </ion-modal>
 
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{modalAddonTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false); productBalance = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <!-- <ion-item>
+            <ion-label slot="center" *ngIf="productBalance.length > 0">{{productBalance[0].title}}</ion-label>
+          </ion-item> -->
+          <ion-item>
+            <ion-label>Склад</ion-label>
+            <ion-label>Серия</ion-label>
+            <ion-label>Остаток</ion-label>
+          </ion-item>
+          <ion-item *ngFor="let item of productBalance">
+            <ion-label>{{ item.storage }}</ion-label>
+            <ion-label>{{ item.lot }}</ion-label>
+            <ion-label>{{ item.balance }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-alert
+  [isOpen]="isAlertOpen"
+  header="Цена"
+  [message]="alertMessage"
+  [buttons]="['OK']"
+  (didDismiss)="setOpenAlert(false)"
+></ion-alert>
 </ion-content>

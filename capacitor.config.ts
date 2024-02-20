@@ -4,8 +4,17 @@ const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'MirOboevApp',
   webDir: 'www',
+  plugins: {
+    CapacitorHttp: {
+      enabled: true
+    }
+  },
   server: {
-    androidScheme: 'https'
+    androidScheme: 'http',
+    cleartext: true,
+  },
+  android: {
+    allowMixedContent: true
   }
 };
 

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button default-href=""></ion-back-button>
+      <ion-back-button default-href="#"></ion-back-button>
     </ion-buttons>
     <ion-title>Заказ №{{order.id}}</ion-title>
     <ion-buttons slot="end">
@@ -10,7 +10,7 @@
           <ion-icon name="create-outline"></ion-icon>
         </ion-button>
       </ion-nav-link>
-      <ion-button (clik)="printOrder()">
+      <ion-button (click)="printOrder()">
         <ion-icon name="print-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,20 +18,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <ion-title size="large">Заказ №{{order.id}}</ion-title>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-grid>
     <ion-row>
       <ion-col size="12">
@@ -93,7 +79,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <pdf-viewer [src]="pdfUrl" [render-text]="true" style="display: block;"></pdf-viewer>
-
 </ion-content>
+<pdf-viewer #pdf class="for-print" [src]="pdfUrl" [render-text]="true"></pdf-viewer>

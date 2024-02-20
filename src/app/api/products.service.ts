@@ -20,4 +20,24 @@ export class ProductsService {
       }
     })
   }
+
+  findOutPrice(title: string) {
+    return this.http.get(environment.api + '/find-out-price/' + title, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
+  findOutBalance(title: string) {
+    return this.http.get(environment.api + '/find-out-balance/' + title, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
 }

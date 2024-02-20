@@ -8,6 +8,7 @@ import { OrdersService } from 'src/app/api/orders.service';
   styleUrls: ['./order.component.scss'],
 })
 export class OrderComponent implements OnInit {
+  @ViewChild('pdf', { static: true }) pdfViewer!: ElementRef | any;
   order: any = {};
   pdfUrl: any;
   constructor(
@@ -16,10 +17,10 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: any) => {      
+    this.route.queryParams.subscribe((params: any) => {
       if (params.id === 0 || params.id === '0') {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
-      }else {
+      } else {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
           this.orderService.getOrderForm(this.order.id).subscribe((res: any) => {
@@ -36,8 +37,8 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  printOrder(){
-    
-  } 
+  printOrder() {
+    window.print();
+  }
 
 }

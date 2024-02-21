@@ -14,22 +14,26 @@
         <h4 class="">Товары</h4>
       </ion-col>
       <ion-col size="12">
-        
-        <ion-list>
-          <ion-item (contextmenu)="contexMenu($event, product.title)" *ngFor="let product of order.products"
-            (click)="prepareAction('edit', product); modal.isOpen = true">
-            <ion-label>
+
+        <ion-list lines="full">
+          <ion-item *ngFor="let product of order.products" >
+            <ion-label (click)="prepareAction('edit', product); modal.isOpen = true">
               <h2>{{ product.title }}</h2>
               <p>{{ product.price }}смн x {{ product.packCount }}</p>
             </ion-label>
             <ion-label class="ion-text-end">
               {{ product.price * product.packCount }}смн
             </ion-label>
-            <ion-button (click)="removeProduct(product.title)" color="danger" fill="clear" slot="end">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
+            <ion-buttons>
+              <ion-button (click)="removeProduct(product.title)" color="danger" fill="clear" slot="end">
+                <ion-icon name="trash-outline" ></ion-icon>
+              </ion-button>
+              <ion-button (click)="contexMenu($event, product.title)" color="dark" fill="clear" slot="end">
+                <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
           </ion-item>
-          
+
           <ion-item>
             <ion-label>
               <ion-button (click)="prepareAction('add'); modal.isOpen = true" slot="center" fill="clear">
@@ -52,9 +56,9 @@
         <h4 class="">Комментарий</h4>
       </ion-col>
       <ion-col size="12">
-        <ion-list>
+        <ion-list lines="full">
           <ion-item lines="none">
-            <ion-textarea [(ngModel)]="order.comment" ></ion-textarea>
+            <ion-textarea [(ngModel)]="order.comment"></ion-textarea>
           </ion-item>
         </ion-list>
       </ion-col>
@@ -66,7 +70,7 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  
+
   <div class="mo-contextmenu" #contextmenu>
     <ion-button (click)="findOutPrice()" fill="clear">Узнать цену</ion-button>
     <ion-button (click)="findOutBalance()" fill="clear">Узнать остаток</ion-button>
@@ -86,7 +90,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-list>
+        <ion-list lines="full">
           <ion-item>
             <ion-label position="floating">Наименование</ion-label>
             <ion-input (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
@@ -94,11 +98,13 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Количество</ion-label>
-            <ion-input (input)="countProductTotal()" [clearOnEdit]="true" type="number" [(ngModel)]="newProduct.packCount"></ion-input>
+            <ion-input (input)="countProductTotal()" [clearOnEdit]="true" type="number"
+              [(ngModel)]="newProduct.packCount"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Цена</ion-label>
-            <ion-input (input)="countProductTotal()" type="number" [clearOnEdit]="true" [(ngModel)]="newProduct.price"></ion-input>
+            <ion-input (input)="countProductTotal()" type="number" [clearOnEdit]="true"
+              [(ngModel)]="newProduct.price"></ion-input>
           </ion-item>
           <ion-item lines="none">
             <ion-label>
@@ -128,10 +134,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-list>
-          <!-- <ion-item>
-            <ion-label slot="center" *ngIf="productBalance.length > 0">{{productBalance[0].title}}</ion-label>
-          </ion-item> -->
+        <ion-list lines="full">
           <ion-item>
             <ion-label>Склад</ion-label>
             <ion-label>Серия</ion-label>
@@ -147,11 +150,28 @@
     </ng-template>
   </ion-modal>
 
-  <ion-alert
-  [isOpen]="isAlertOpen"
-  header="Цена"
-  [message]="alertMessage"
-  [buttons]="['OK']"
-  (didDismiss)="setOpenAlert(false)"
-></ion-alert>
+  <ion-modal [isOpen]="isPriceOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{modalAddonTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenAlert(false); productBalance = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label>Вид цены</ion-label>
+            <ion-label>цена</ion-label>
+          </ion-item>
+          <ion-item *ngFor="let item of prices">
+            <ion-label>{{ item.priceType }}</ion-label>
+            <ion-label>{{ item.price }} {{ item.priceCurrency }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

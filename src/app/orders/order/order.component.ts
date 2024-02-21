@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from 'src/app/api/orders.service';
+import { ToastService } from 'src/app/api/toast.service';
 
 @Component({
   selector: 'app-order',
@@ -13,7 +14,8 @@ export class OrderComponent implements OnInit {
   pdfUrl: any;
   constructor(
     private orderService: OrdersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService,
   ) { }
 
   ngOnInit() {
@@ -31,8 +33,8 @@ export class OrderComponent implements OnInit {
             }
             const blob = new Blob([uintArray], { type: 'application/octet-stream' });
             this.pdfUrl = URL.createObjectURL(blob);
-          })
-        });
+          }, (err: any) => this.toast.presentToast('Не удалось загрузить документ', 'warning'))
+        }, (err: any) => this.toast.presentToast('Не удалось загрузить данные заказа', 'warning'));
       }
     });
   }

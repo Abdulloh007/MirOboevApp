@@ -11,28 +11,20 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12">
-        <ion-list>
-          <ion-item *ngIf="draftOrder">
+        <ion-list lines="full">
+          <ion-item *ngIf="draftOrder" routerLink="order" [queryParams]="{id: 0}">
+            <ion-icon name="document-lock-outline" slot="start"></ion-icon>
             <ion-label>
               <h2>Черновик</h2>
               <p>{{ draftOrder.sum ? draftOrder.sum : 0}}смн</p>
             </ion-label>
-            <ion-nav-link routerLink="order" [queryParams]="{id: 0}">
-              <ion-fab-button slot="end" size="small" shape="round">
-                <ion-icon name="arrow-forward-outline"></ion-icon>
-              </ion-fab-button>
-            </ion-nav-link>
           </ion-item>
-          <ion-item *ngFor="let order of orders">
+          <ion-item *ngFor="let order of orders" routerLink="order" [queryParams]="{id: order.id}">
+            <ion-icon name="document-text-outline" slot="start"></ion-icon>
             <ion-label>
               <h2>{{ order.link }}</h2>
               <p>{{ order.sum }}смн</p>
             </ion-label>
-            <ion-nav-link routerLink="order" [queryParams]="{id: order.id}">
-              <ion-fab-button slot="end" size="small" shape="round">
-                <ion-icon name="arrow-forward-outline"></ion-icon>
-              </ion-fab-button>
-            </ion-nav-link>
           </ion-item>
         </ion-list>
       </ion-col>

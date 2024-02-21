@@ -3,6 +3,7 @@ import { AuthService } from '../api/auth.service';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
+import { ToastService } from '../api/toast.service';
 
 @Component({
   selector: 'app-auth',
@@ -16,7 +17,7 @@ export class AuthPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastController: ToastController
+    private toast: ToastService
   ) { }
 
   ngOnInit() {
@@ -28,19 +29,9 @@ export class AuthPage implements OnInit {
       localStorage.setItem('token', this.authService.UTF8TextToBase64(this.login + ':' + this.password));
       this.router.navigate(['/home']);
     }, (error: any) => {
-      console.log(error);
-      this.presentToast(error.status.toString() + ' ' + error?.error?.text + ' ' + environment.api);
+      this.toast.presentToast(error.status.toString() + ' ' + error?.error?.text + ' ' + environment.api, 'danger');
       
     });
   }
 
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 3000,
-      position: 'top',
-    });
-
-    await toast.present();
-  }
 }

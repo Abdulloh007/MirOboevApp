@@ -1,9 +1,56 @@
 <ion-content class="ion-padding" [fullscreen]="true">
 
   <ion-grid class="auth__container">
-    <ion-row>
+    <ion-row *ngIf="action === 'SELECT_SERVER'">
+      <ion-col size="12">
+        <h1 class="page__title">Приложение</h1>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item button (click)="setServerBase(item)" *ngFor="let item of serverList">
+            <ion-label>
+              <h2>{{item}}</h2>
+            </ion-label>
+            <ion-button color="danger" (click)="removeServer(item)" slot="end" fill="clear" shape="round">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-button fill="clear" (click)="newServer()">
+              <ion-icon name="add-sharp" slot="start"></ion-icon>
+              Добавить сервер
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="action === 'SERVER_HANDLING'">
+      <ion-col size="2">
+        <ion-fab-button size="small" (click)="setAction('SELECT_SERVER')">
+          <ion-icon size="small" name="arrow-back-sharp"></ion-icon>
+        </ion-fab-button>
+      </ion-col>
+      <ion-col size="10">
+        <h1 class="page__title">Сервер</h1>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Сервер</ion-label>
+            <ion-input type="text" autofocus="true" [(ngModel)]="handlingServer"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-button class="auth__btn" expand="block" (click)="saveServer()">Сохранить</ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="action === 'USER_AUTH'">
       <ion-col size="12">
         <h1 class="page__title">Авторизация</h1>
+        <p class="page__subtitle" (click)="setAction('SELECT_SERVER')">{{ currentServer() }}</p>
       </ion-col>
       <ion-col size="12">
         <ion-list>
@@ -13,12 +60,13 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Пароль</ion-label>
-            <ion-input type="password" [(ngModel)]="password"></ion-input>
+            <ion-input type="password" [(ngModel)]="password" (keyup.enter)="loginUser($event)"></ion-input>
           </ion-item>
           <ion-item lines="none">
             <ion-button class="auth__btn" expand="block" (click)="loginUser()">Войти</ion-button>
           </ion-item>
         </ion-list>
+        <ion-button fill="clear" (click)="setAction('SELECT_SERVER')">Выбрать Сервер</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -1,9 +1,16 @@
 .auth__container {
-    margin-top: 40%;
+    margin: auto;
+    margin-top: calc(50vh - 200px);
+    max-width: 768px;
 }
 
 .auth__btn {
     margin-top: 20px;
     width: 100%;
     text-align: center;
+}
+
+.page__subtitle {
+    color:  var(--ion-color-primary);
+    margin: 0;
 }

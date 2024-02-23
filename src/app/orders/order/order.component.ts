@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ToastService } from 'src/app/api/toast.service';
+import * as printJS from 'print-js';
+import Printer from 'src/app/directives/printer.plugin';
 
 @Component({
   selector: 'app-order',
@@ -39,8 +41,11 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  printOrder() {
-    window.print();
+  async printOrder() {
+    //window.print();
+    printJS({ printable: 'pdf', type: 'html' })
+    const { value } = await Printer.print({ value: 'Hello World!' });
+    this.toast.presentToast('Response from native: ' + value, 'warning');
   }
 
 }

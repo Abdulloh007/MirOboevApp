@@ -43,8 +43,6 @@ export class OrdersService {
   getOrderForm(id: string | number) {
     return this.http.get(environment.api + '/get_order_document/' + id, {
       headers: {
-        'Content-Type': 'application/json, charset=utf-8',
-        'Accept': 'application/json',
         'Authorization': 'Basic ' + localStorage.getItem('token')
       }
     })

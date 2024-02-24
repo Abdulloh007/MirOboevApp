@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { HostControlService } from './host-control.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +9,12 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private hostControlSvr: HostControlService
   ) { }
 
   login(username: string, password: string) {
-    return this.http.get(environment.api + '/user', {
+    return this.http.get( this.hostControlSvr.defineHost() + '/user', {
       headers: {
         'Authorization': 'Basic ' + this.UTF8TextToBase64(username + ':' + password)
       }

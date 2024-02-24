@@ -36,6 +36,7 @@ export class AuthPage implements OnInit {
       e.target.blur()
     }
     this.authService.login(this.login, this.password).subscribe((data: any) => {
+      localStorage.setItem('account', data.account);
       localStorage.setItem('token', this.authService.UTF8TextToBase64(this.login + ':' + this.password));
       this.router.navigate(['/home']);
     }, (error: any) => {

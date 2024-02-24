@@ -4,6 +4,7 @@ import { OrdersService } from 'src/app/api/orders.service';
 import { ToastService } from 'src/app/api/toast.service';
 import * as printJS from 'print-js';
 import Printer from 'src/app/directives/printer.plugin';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-order',
@@ -27,25 +28,30 @@ export class OrderComponent implements OnInit {
       } else {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
-          this.orderService.getOrderForm(this.order.id).subscribe((res: any) => {
-            const blobData = atob(res.file);
-            const uintArray = new Uint8Array(blobData.length);
-            for (let i = 0; i < blobData.length; i++) {
-              uintArray[i] = blobData.charCodeAt(i);
-            }
-            const blob = new Blob([uintArray], { type: 'application/octet-stream' });
-            this.pdfUrl = URL.createObjectURL(blob);
-          }, (err: any) => this.toast.presentToast('Не удалось загрузить документ', 'warning'))
+
         }, (err: any) => this.toast.presentToast('Не удалось загрузить данные заказа', 'warning'));
       }
     });
   }
 
-  async printOrder() {
-    //window.print();
-    printJS({ printable: 'pdf', type: 'html' })
-    const { value } = await Printer.print({ value: 'Hello World!' });
-    this.toast.presentToast('Response from native: ' + value, 'warning');
+  printOrder() {
+    this.toast.presentToast('Загрузка документа...')
+    this.orderService.getOrderForm(this.order.id).subscribe(async (res: any) => {
+      if (Capacitor.isNativePlatform()) {
+        await Printer.print({ value: res.file });
+      }
+      else {
+        const blobData = atob(res.file);
+        const uintArray = new Uint8Array(blobData.length);
+        for (let i = 0; i < blobData.length; i++) {
+          uintArray[i] = blobData.charCodeAt(i);
+        }
+        const blob = new Blob([uintArray], { type: 'application/octet-stream' });
+        this.pdfUrl = URL.createObjectURL(blob);
+        setTimeout(() => printJS({ printable: 'pdf', type: 'html' }), 1000)
+        
+      }
+    }, (err: any) => this.toast.presentToast('Не удалось загрузить документ', 'warning'))
   }
 
 }

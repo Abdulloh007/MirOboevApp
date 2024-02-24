@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit{
+  userAccount: string = 'Меню'
+
   constructor(
     private router: Router
   ) {}
@@ -15,5 +17,14 @@ export class AppComponent implements OnInit{
     if (!localStorage.getItem('token')) {
       this.router.navigate(['/auth'])
     }
+    if (localStorage.getItem('account')) this.userAccount = localStorage.getItem('account') || 'Меню'
+  }
+
+  exitAccount() {
+    localStorage.removeItem('activeServer')
+    localStorage.removeItem('token')
+    localStorage.removeItem('orderDraft')
+    localStorage.removeItem('account')
+    this.router.navigate(['/auth'])
   }
 }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { HostControlService } from './host-control.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +9,12 @@ import { environment } from 'src/environments/environment';
 export class ProductsService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private hostControlSvr: HostControlService
   ) { }
 
   searchProducts(query: string) {
-    return this.http.get(environment.api + '/s/' + query, {
+    return this.http.get(this.hostControlSvr.defineHost() + '/s/' + query, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
@@ -22,7 +24,7 @@ export class ProductsService {
   }
 
   findOutPrice(title: string) {
-    return this.http.get(environment.api + '/find-out-price/' + title, {
+    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-price/' + title, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
@@ -32,7 +34,7 @@ export class ProductsService {
   }
 
   findOutBalance(title: string) {
-    return this.http.get(environment.api + '/find-out-balance/' + title, {
+    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-balance/' + title, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',

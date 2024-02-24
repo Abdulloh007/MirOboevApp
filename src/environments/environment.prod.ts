@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: (localStorage.getItem('activeServer') ? localStorage.getItem('activeServer') : 'http://localhost') + '/hs/api',
+  api: '/erpdev/hs/api',
 };

@@ -1,5 +1,15 @@
 h1.logo__title {
-  font-size: 8rem;
-  text-align: center;
-  color: var(--primary-color);
+    font-size: 8rem;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.mo-btn__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    ion-icon {
+        margin-bottom: 10px;
+    }
 }

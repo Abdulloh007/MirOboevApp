@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { FindOutPageRoutingModule } from './find-out-routing.module';
 
 import { FindOutPage } from './find-out.page';
+import { PriceComponent } from './price/price.component';
+import { BalanceComponent } from './balance/balance.component';
 
 @NgModule({
   imports: [
@@ -15,6 +17,6 @@ import { FindOutPage } from './find-out.page';
     IonicModule,
     FindOutPageRoutingModule
   ],
-  declarations: [FindOutPage]
+  declarations: [FindOutPage, PriceComponent, BalanceComponent]
 })
 export class FindOutPageModule {}

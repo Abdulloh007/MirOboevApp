@@ -5,11 +5,6 @@
     </ion-buttons>
     <ion-title>Заказ №{{order.id}}</ion-title>
     <ion-buttons slot="end">
-      <ion-nav-link routerLink="/orders/edit" [queryParams]="{id: order.id}">
-        <ion-button>
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
-      </ion-nav-link>
       <ion-button (click)="printOrder()">
         <ion-icon name="print-outline"></ion-icon>
       </ion-button>
@@ -46,14 +41,16 @@
       </ion-col>
       <ion-col size="12">
         <ion-list>
-          <ion-item *ngFor="let product of order.products">
-            <ion-label>
-              <h2>{{ product.title }}</h2>
-              <p>{{ product.price }}смн x {{ product.packCount }}</p>
-            </ion-label>
-            <ion-label slot="end" class="ion-text-end">
-              {{ product.price * product.packCount }}смн
-            </ion-label>
+          <ion-item class="mo-prod__row" *ngFor="let product of order.products">
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                <h2>{{ product.title }}</h2>
+                <p>{{ product.price }}смн x {{ product.packCount }}</p>
+              </ion-label>
+              <ion-label slot="end" class="ion-text-end mo-col">
+                {{ product.price * product.packCount }}смн
+              </ion-label>
+            </div>
           </ion-item>
           <ion-item lines="none">
             <ion-label>
@@ -76,6 +73,12 @@
             </ion-label>
           </ion-item>
         </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-button routerLink="/orders/edit" [queryParams]="{id: order.id}">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Изменить
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

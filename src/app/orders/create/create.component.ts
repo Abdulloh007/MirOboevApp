@@ -14,6 +14,7 @@ interface Order {
   sum: number;
 }
 interface Product {
+  id: number | string;
   title: string;
   price: number;
   packCount: number;
@@ -43,27 +44,30 @@ export class CreateComponent implements OnInit {
     sum: 0
   };
 
-  newProduct: Product = {
+  newProduct: any | Product = {
+    id: 0,
     title: '',
     price: 0,
     packCount: 0,
     discount: 0,
-    total: 0
+    total: 0,
+    db_price: 0,
+    db_balance: 0
   };
 
-  searchResult: string[] = [];
+  searchResult: any[] = [];
+  selectedProd: string = '';
   activeProduct: string = '';
+  activeProductId: number | string = '';
   isModalOpen: boolean = false;
   modalAddonTitle: string = '';
   productBalance: any[] = [];
   isPriceOpen: boolean = false;
   prices: any[] = [];
 
-
   constructor(
     private orderService: OrdersService,
     private productsService: ProductsService,
-    private toastController: ToastController,
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastService
@@ -84,12 +88,15 @@ export class CreateComponent implements OnInit {
 
   cancel() {
     this.newProduct = {
+      id: 0,
       title: '',
       price: 0,
       packCount: 0,
       discount: 0,
       total: 0
     };
+    this.searchResult = [];
+    this.selectedProd = '';
     this.autoSaveOnLocalStorage();
     this.modal.isOpen = false;
     this.modal.dismiss(null, 'cancel');
@@ -98,28 +105,31 @@ export class CreateComponent implements OnInit {
   confirm() {
     let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
     if (processedProd) {
-      console.log(processedProd);
-      console.log(this.order.products);
       this.order.sum -= processedProd.total;
       this.countProductTotal();
       processedProd.price = this.newProduct.price;
       processedProd.packCount = this.newProduct.packCount;
       processedProd.total = this.newProduct.total;
-      console.log(processedProd);
-      console.log(this.order.products);
       this.order.sum = this.order.sum + processedProd.total;
-      console.log(this.order.sum);
     } else {
+      if(this.selectedProd === '') {
+        this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
+        return
+      } 
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
+      this.selectedProd = '';
     }
     this.newProduct = {
+      id: 0,
       title: '',
       price: 0,
       packCount: 0,
       discount: 0,
-      total: 0
+      total: 0,
+      db_price: 0,
+      db_balance: 0
     };
     this.autoSaveOnLocalStorage();
     this.modal.isOpen = false;
@@ -149,6 +159,10 @@ export class CreateComponent implements OnInit {
       this.modalTitle = 'Изменить товар';
       this.modalButton = 'Изменить';
       this.newProduct = Object.assign({}, this.order.products.find(item => item.title === product?.title)) || this.newProduct;
+      this.activeProductId = product?.id || ''
+      this.getTotalPrice()
+      this.getTotalBalance()
+      
     } else {
       this.modalAction = 'add';
       this.modalTitle = 'Добавить товар';
@@ -181,7 +195,7 @@ export class CreateComponent implements OnInit {
     })
   }
 
-  contexMenu(event: any, title: string) {
+  contexMenu(event: any, title: string, id: number | string) {
     // event?.preventDefault();
     this.contextMenu.nativeElement.classList.add('active');
     if (window.innerWidth - event.clientX < 200) {
@@ -191,6 +205,7 @@ export class CreateComponent implements OnInit {
     }
     this.contextMenu.nativeElement.style.top = event.clientY + 'px';
     this.activeProduct = title;
+    this.activeProductId = id;
   }
 
   closeContext() {
@@ -198,9 +213,10 @@ export class CreateComponent implements OnInit {
   }
 
   findOutPrice() {
+    const prod: any = 
     this.closeContext();
     this.modalAddonTitle = this.activeProduct;
-    this.productsService.findOutPrice(this.activeProduct).subscribe((res: any) => {
+    this.productsService.findOutPrice(this.activeProductId).subscribe((res: any) => {
       this.setOpenAlert(true);
       this.prices = res;
       this.activeProduct = '';
@@ -210,11 +226,33 @@ export class CreateComponent implements OnInit {
   findOutBalance() {
     this.closeContext();
     this.modalAddonTitle = this.activeProduct;
-    this.productsService.findOutBalance(this.activeProduct).subscribe((res: any) => {
+    this.productsService.findOutBalance(this.activeProductId).subscribe((res: any) => {
       this.setOpen(true);
       this.productBalance = res;
       this.activeProduct = '';
     }, (err: any) => this.toast.presentToast('Не удалось загрузить данные', 'warning'));
+  }
+
+  getTotalPrice() {
+    this.productsService.findOutPrice(this.newProduct.id).subscribe((res: any) => { 
+      this.prices = res
+      this.newProduct.db_price = `${this.prices[0].price} ${this.prices[0].priceCurrency}` 
+    })
+    
+  }
+
+  getTotalBalance() {
+    this.productsService.findOutBalance(this.newProduct.id).subscribe((res: any) => {
+      this.productBalance = res
+      this.newProduct.db_balance = this.getLocalBalnace()
+    })
+    
+  }
+
+  getLocalBalnace() {
+    let total: number = 0
+    this.productBalance.map(item => total += item.balance)
+    return total
   }
 
   setOpen(isOpen: boolean) {

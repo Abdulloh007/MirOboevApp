@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api: '/erpdev/hs/api',
+  api: '/miroboev2024/hs/api',
 };
 
 /*

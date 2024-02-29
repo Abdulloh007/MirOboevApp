@@ -20,3 +20,31 @@
         z-index: auto;
     }
 }
+
+.mo-prod__row{
+    .mo-row__wrap {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        
+        & > .mo-col {
+            display: block;
+            width: 30%;
+            margin-right: auto;
+            margin-left: auto;
+    
+            &:first-child {
+                width: 55%;
+                margin-left: 0;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+    
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

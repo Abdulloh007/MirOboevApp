@@ -20,30 +20,47 @@
     <ion-row>
       <ion-col size="6">
         <ion-button expand="block" routerLink="/orders">
-          <ion-icon slot="start" name="documents"></ion-icon>
-          Заказы
+          <div class="mo-btn__content">
+            <ion-icon slot="start" size="large" name="documents"></ion-icon>
+            Заказы
+          </div>
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button expand="block" routerLink="/move-orders">
-          <ion-icon slot="start" name="send"></ion-icon>
-          Перемещение
+        <ion-button disabled expand="block" routerLink="/find-out/price">
+          <div class="mo-btn__content">
+            <ion-icon slot="start" size="large" name="cash"></ion-icon>
+            Поступление
+          </div>
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button expand="block" routerLink="/return-orders">
-          <ion-icon slot="start" name="arrow-undo"></ion-icon>
-          Возврат
+        <ion-button disabled expand="block" routerLink="/move-orders">
+          <div class="mo-btn__content">
+            <ion-icon slot="start" size="large" name="send"></ion-icon>
+            Перемещение
+          </div>
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button expand="block" routerLink="/find-out">
+        <ion-button disabled expand="block" routerLink="/return-orders">
+          <div class="mo-btn__content">
+            <ion-icon slot="start" size="large" name="arrow-undo"></ion-icon>
+            Возврат
+          </div>
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        <h2>Операции</h2>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button expand="block" routerLink="/find-out/price">
           <ion-icon slot="start" name="cash"></ion-icon>
           Узнать цену
         </ion-button>
       </ion-col>
       <ion-col size="12">
-        <ion-button expand="block" routerLink="/find-out">
+        <ion-button expand="block" routerLink="/find-out/balance">
           <ion-icon slot="start" name="layers"></ion-icon>
           Узнать остатки
         </ion-button>

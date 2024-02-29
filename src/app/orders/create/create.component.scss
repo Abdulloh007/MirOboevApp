@@ -52,3 +52,43 @@ ion-item {
     pointer-events: all;
     opacity: 1;
 }
+
+.mo-prod__row, .mo-prod__row{
+
+    &>.mo-col {
+        display: block;
+        width: 30%;
+        margin-right: auto;
+        margin-left: auto;
+
+        &:first-child {
+            width: 45%;
+            margin-left: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        &:last-child {
+            text-align: center;
+            width: 20%;
+            margin-right: 0;
+            
+            & ion-button {
+                --padding-start: 0;
+                --padding-end: 0
+            }
+        }
+    }
+}
+
+.mo-prompt {
+    padding: 5px 16px;
+
+    p {
+        margin: 0;
+        font-size: 12px;
+        filter: brightness(0.8);
+        -webkit-filter: brightness(0.8);
+}
+}

@@ -23,8 +23,8 @@ export class ProductsService {
     })
   }
 
-  findOutPrice(title: string) {
-    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-price/' + title, {
+  findOutPrice(number: number | string) {
+    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-price/' + number, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
@@ -33,8 +33,8 @@ export class ProductsService {
     })
   }
 
-  findOutBalance(title: string) {
-    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-balance/' + title, {
+  findOutBalance(id: number | string) {
+    return this.http.get(this.hostControlSvr.defineHost() + '/find-out-balance/' + id, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',

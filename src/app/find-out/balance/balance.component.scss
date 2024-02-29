@@ -1,0 +1,22 @@
+.mo-prod__row {
+
+    &>.mo-col {
+        display: block;
+        width: 30%;
+        margin: auto;
+
+        &:first-child {
+            width: 45%;
+            margin-left: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        &:last-child {
+            text-align: center;
+            width: 20%;
+            margin-right: 0;
+        }
+    }
+}

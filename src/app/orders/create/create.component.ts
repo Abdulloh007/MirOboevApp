@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
+import { LoaderService } from 'src/app/api/loader.service';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
 import { ToastService } from 'src/app/api/toast.service';
@@ -70,7 +71,8 @@ export class CreateComponent implements OnInit {
     private productsService: ProductsService,
     private route: ActivatedRoute,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private loaderSvr: LoaderService
   ) { }
 
   ngOnInit() {
@@ -112,10 +114,10 @@ export class CreateComponent implements OnInit {
       processedProd.total = this.newProduct.total;
       this.order.sum = this.order.sum + processedProd.total;
     } else {
-      if(this.selectedProd === '') {
+      if (this.selectedProd === '') {
         this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
         return
-      } 
+      }
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
@@ -162,7 +164,7 @@ export class CreateComponent implements OnInit {
       this.activeProductId = product?.id || ''
       this.getTotalPrice()
       this.getTotalBalance()
-      
+
     } else {
       this.modalAction = 'add';
       this.modalTitle = 'Добавить товар';
@@ -180,14 +182,19 @@ export class CreateComponent implements OnInit {
   }
 
   saveOrder() {
+    this.loaderSvr.showLoader = true
     this.toast.presentToast('Сохранение заказа...');
     this.orderService.createOrder(this.order).subscribe((res: any) => {
       this.router.navigate(['/orders']).then(() => {
         window.location.reload();
       });
       localStorage.removeItem('orderDraft');
+      this.loaderSvr.showLoader = false
       this.toast.presentToast('Заказ успешно сохранен');
-    }, (err: any) => this.toast.presentToast('Не удалось сохранить заказ', 'danger'));
+    }, (err: any) => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast('Не удалось сохранить заказ', 'danger')
+    });
   }
 
   printOrder() {
@@ -213,8 +220,8 @@ export class CreateComponent implements OnInit {
   }
 
   findOutPrice() {
-    const prod: any = 
-    this.closeContext();
+    const prod: any =
+      this.closeContext();
     this.modalAddonTitle = this.activeProduct;
     this.productsService.findOutPrice(this.activeProductId).subscribe((res: any) => {
       this.setOpenAlert(true);
@@ -234,11 +241,11 @@ export class CreateComponent implements OnInit {
   }
 
   getTotalPrice() {
-    this.productsService.findOutPrice(this.newProduct.id).subscribe((res: any) => { 
+    this.productsService.findOutPrice(this.newProduct.id).subscribe((res: any) => {
       this.prices = res
-      this.newProduct.db_price = `${this.prices[0].price} ${this.prices[0].priceCurrency}` 
+      this.newProduct.db_price = `${this.prices[0].price} ${this.prices[0].priceCurrency}`
     })
-    
+
   }
 
   getTotalBalance() {
@@ -246,7 +253,7 @@ export class CreateComponent implements OnInit {
       this.productBalance = res
       this.newProduct.db_balance = this.getLocalBalnace()
     })
-    
+
   }
 
   getLocalBalnace() {

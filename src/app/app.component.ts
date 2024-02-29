@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoaderService } from './api/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,9 @@ export class AppComponent implements OnInit{
   userAccount: string = 'Меню'
 
   constructor(
-    private router: Router
-  ) {}
+    private router: Router,
+    public loaderSvr: LoaderService
+    ) {}
 
   ngOnInit(): void {
     if (!localStorage.getItem('token')) {
@@ -27,4 +29,5 @@ export class AppComponent implements OnInit{
     localStorage.removeItem('account')
     this.router.navigate(['/auth'])
   }
+  
 }

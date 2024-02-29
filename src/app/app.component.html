@@ -14,4 +14,8 @@
   </ion-menu>
 
   <ion-router-outlet id="main-content"></ion-router-outlet>
+
+  <div class="mo-global__loader__wrap" [ngClass]="{show: this.loaderSvr.showLoader }">
+    <div class="loader"></div>
+  </div>
 </ion-app>

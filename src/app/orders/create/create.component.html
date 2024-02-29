@@ -16,7 +16,7 @@
       <ion-col size="12">
 
         <ion-list lines="full">
-          <ion-item class="mo-prod__row" *ngFor="let product of order.products" >
+          <ion-item class="mo-prod__row" *ngFor="let product of order.products">
             <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
               <h2 class="mo-wrap__text">{{ product.title }}</h2>
               <p>{{ product.packCount }} x {{ product.price }}смн</p>
@@ -26,7 +26,7 @@
             </ion-label>
             <ion-buttons class="mo-col">
               <ion-button (click)="removeProduct(product.title)" color="danger" fill="clear" slot="end">
-                <ion-icon name="trash-outline" ></ion-icon>
+                <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
               <ion-button (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
                 <ion-icon name="ellipsis-vertical-outline"></ion-icon>
@@ -93,24 +93,30 @@
         <ion-list lines="full">
           <ion-item>
             <ion-label position="floating">Наименование</ion-label>
-            <ion-input 
-            (input)="searchProduct($event)" type="text" 
-            [(ngModel)]="newProduct.title"
+            <ion-input (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
               helperText="Введите больше трех символов для подсказки"></ion-input>
           </ion-item>
-          <div class="mo-prompt">
-            <p>Доступный остаток: {{ newProduct.db_balance }}</p>
-            <p>Начальная цена: {{ newProduct.db_price }}</p>
-          </div>
+          <!-- <div class="mo-prompt">
+            <p>Доступный остаток: </p>
+            <p>Начальная цена: </p>
+          </div> -->
           <ion-item>
             <ion-label position="floating">Количество</ion-label>
             <ion-input (input)="countProductTotal()" [clearOnEdit]="true" type="number"
               [(ngModel)]="newProduct.packCount"></ion-input>
+            <ion-button (click)="toggleInfo($event)" fill="clear" class="mo-prompt">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>{{ newProduct.db_balance }}</span>
+            </ion-button>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Цена</ion-label>
             <ion-input (input)="countProductTotal()" type="number" [clearOnEdit]="true"
               [(ngModel)]="newProduct.price"></ion-input>
+            <ion-button (click)="toggleInfo($event)" fill="clear" class="mo-prompt">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>{{ newProduct.db_price }}</span>
+            </ion-button>
           </ion-item>
           <ion-item lines="none">
             <ion-label>
@@ -122,8 +128,9 @@
           </ion-item>
         </ion-list>
         <div class="mo-data__options" *ngIf="searchResult.length > 0">
-          <div (click)="selectedProd = prod.name; newProduct.title = prod.name; newProduct.id = prod.id; searchResult = []; getTotalPrice(); getTotalBalance()" class="mo-do__item"
-            *ngFor="let prod of searchResult">{{prod.name}}</div>
+          <div
+            (click)="selectedProd = prod.name; newProduct.title = prod.name; newProduct.id = prod.id; searchResult = []; getTotalPrice(); getTotalBalance()"
+            class="mo-do__item" *ngFor="let prod of searchResult">{{prod.name}}</div>
         </div>
       </ion-content>
     </ng-template>

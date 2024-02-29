@@ -9,7 +9,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-list>
-    <ion-item button *ngFor="let item of searchResult" (click)="activeProduct = item; findOutBalance()">{{item}}</ion-item>
+    <ion-item button *ngFor="let item of searchResult" (click)="activeProduct = item.id; findOutBalance(); modalAddonTitle = item.name;">{{item.name}}</ion-item>
   </ion-list>
 
   <ion-modal [isOpen]="isModalOpen">
@@ -33,6 +33,11 @@
             <span class="mo-col">{{ item.storage }}</span>
             <span class="mo-col">{{ item.lot }}</span>
             <span class="mo-col">{{ item.balance }}</span>
+          </ion-item>
+          <ion-item class="mo-row mo-prod__row">
+            <span class="mo-col">Итого</span>
+            <span class="mo-col"></span>
+            <span class="mo-col">{{ getLocalBalnace() }}</span>
           </ion-item>
         </ion-list>
       </ion-content>

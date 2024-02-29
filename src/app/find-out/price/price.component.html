@@ -9,7 +9,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-list>
-    <ion-item button *ngFor="let item of searchResult" (click)="activeProduct = item; findOutPrice()">{{item}}</ion-item>
+    <ion-item button *ngFor="let item of searchResult" (click)="activeProduct = item.id; findOutPrice(); modalAddonTitle = item.name;">{{item.name}}</ion-item>
   </ion-list>
 
   <ion-modal [isOpen]="isPriceOpen">

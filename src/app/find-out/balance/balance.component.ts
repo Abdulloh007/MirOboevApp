@@ -11,7 +11,7 @@ export class BalanceComponent  implements OnInit {
   isModalOpen: boolean = false;
   prices: any[] = [];
   productBalance: any[] = [];
-  searchResult: string[] = [];
+  searchResult: any[] = [];
   activeProduct: string = '';
   modalAddonTitle: string = '';
 
@@ -37,11 +37,16 @@ export class BalanceComponent  implements OnInit {
   }
   
   findOutBalance() {
-    this.modalAddonTitle = this.activeProduct;
     this.productsService.findOutBalance(this.activeProduct).subscribe((res: any) => {
       this.setOpen(true);
       this.productBalance = res;
       this.activeProduct = '';
     }, (err: any) => this.toast.presentToast('Не удалось загрузить данные', 'warning'));
+  }
+
+  getLocalBalnace() {
+    let total: number = 0
+    this.productBalance.map(item => total += item.balance)
+    return total
   }
 }

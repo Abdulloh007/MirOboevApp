@@ -11,7 +11,7 @@ export class PriceComponent  implements OnInit {
   isPriceOpen: boolean = false;
   prices: any[] = [];
   productBalance: any[] = [];
-  searchResult: string[] = [];
+  searchResult: any[] = [];
   activeProduct: string = '';
   modalAddonTitle: string = '';
 
@@ -35,7 +35,6 @@ export class PriceComponent  implements OnInit {
   }
 
   findOutPrice() {
-    this.modalAddonTitle = this.activeProduct;
     this.productsService.findOutPrice(this.activeProduct).subscribe((res: any) => {
       this.setOpenAlert(true);
       this.prices = res;

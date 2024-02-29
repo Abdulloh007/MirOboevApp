@@ -262,4 +262,12 @@ export class CreateComponent implements OnInit {
   setOpenAlert(isOpen: boolean) {
     this.isPriceOpen = isOpen;
   }
+
+  toggleInfo(event: any) {
+    if (event.target.localName === 'ion-button') {
+      event.target.classList.toggle('show');
+    } else {
+      event.target.parentElement.classList.toggle('show');
+    }
+  }
 }

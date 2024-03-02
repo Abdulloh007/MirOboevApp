@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
+import { ClientService } from 'src/app/api/client.service';
 import { LoaderService } from 'src/app/api/loader.service';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
@@ -13,6 +14,7 @@ interface Order {
   comment: string;
   products: Product[];
   sum: number;
+  client?: any;
 }
 interface Product {
   id: number | string;
@@ -60,11 +62,15 @@ export class CreateComponent implements OnInit {
   selectedProd: string = '';
   activeProduct: string = '';
   activeProductId: number | string = '';
+  previosProduct: string = '';
   isModalOpen: boolean = false;
   modalAddonTitle: string = '';
   productBalance: any[] = [];
   isPriceOpen: boolean = false;
   prices: any[] = [];
+
+  showClientModal: boolean = false;
+  clientSearchResult: any[] = [];
 
   constructor(
     private orderService: OrdersService,
@@ -72,7 +78,8 @@ export class CreateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastService,
-    private loaderSvr: LoaderService
+    private loaderSvr: LoaderService,
+    private clientSvr: ClientService
   ) { }
 
   ngOnInit() {
@@ -118,6 +125,8 @@ export class CreateComponent implements OnInit {
         this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
         return
       }
+      const prevProd: Product | undefined = this.order.products.find(item => item.title === this.previosProduct);
+      if (this.modalAction === 'edit' && !processedProd && prevProd) this.removeProduct(prevProd.title)
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
@@ -151,6 +160,8 @@ export class CreateComponent implements OnInit {
       this.productsService.searchProducts(event.target.value).subscribe((res: any) => {
         this.searchResult = res;
       }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.searchResult = [];
     }
   }
 
@@ -160,8 +171,9 @@ export class CreateComponent implements OnInit {
       this.modalAction = 'edit';
       this.modalTitle = 'Изменить товар';
       this.modalButton = 'Изменить';
-      this.newProduct = Object.assign({}, this.order.products.find(item => item.title === product?.title)) || this.newProduct;
+      this.newProduct = Object.assign({}, product) || this.newProduct;
       this.activeProductId = product?.id || ''
+      this.previosProduct = product?.title || ''
       this.getTotalPrice()
       this.getTotalBalance()
 
@@ -195,11 +207,6 @@ export class CreateComponent implements OnInit {
       this.loaderSvr.showLoader = false
       this.toast.presentToast('Не удалось сохранить заказ', 'danger')
     });
-  }
-
-  printOrder() {
-    this.orderService.getOrderForm(this.order.id).subscribe((res: any) => {
-    })
   }
 
   contexMenu(event: any, title: string, id: number | string) {
@@ -270,11 +277,31 @@ export class CreateComponent implements OnInit {
     this.isPriceOpen = isOpen;
   }
 
+  setClientModal(isOpen: boolean) {
+    this.showClientModal = isOpen;
+  }
+
   toggleInfo(event: any) {
     if (event.target.localName === 'ion-button') {
       event.target.classList.toggle('show');
     } else {
       event.target.parentElement.classList.toggle('show');
     }
+  }
+
+  searchClient(event: any) {
+    if (event.target.value.length >= 3) {   
+      this.clientSvr.searchClient(event.target.value).subscribe((res: any) => {
+        this.clientSearchResult = res;
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.clientSearchResult = [];
+    }
+  }
+
+  setClient(client: any) {
+    this.order.client = client;
+    this.setClientModal(false)
+    this.clientSearchResult = []
   }
 }

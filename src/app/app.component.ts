@@ -27,7 +27,7 @@ export class AppComponent implements OnInit{
     localStorage.removeItem('token')
     localStorage.removeItem('orderDraft')
     localStorage.removeItem('account')
-    this.router.navigate(['/auth'])
+    location.reload() 
   }
   
 }

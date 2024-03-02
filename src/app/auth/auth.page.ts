@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '../api/toast.service';
+import { LoaderService } from '../api/loader.service';
 
 @Component({
   selector: 'app-auth',
@@ -20,7 +21,8 @@ export class AuthPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private loaderSvr: LoaderService
   ) { }
 
   ngOnInit() {
@@ -35,12 +37,15 @@ export class AuthPage implements OnInit {
     if (e !== null && e !== undefined) {
       e.target.blur()
     }
+    this.loaderSvr.showLoader = true
     this.authService.login(this.login, this.password).subscribe((data: any) => {
       localStorage.setItem('account', data.account);
       localStorage.setItem('token', this.authService.UTF8TextToBase64(this.login + ':' + this.password));
+      this.loaderSvr.showLoader = false
       this.router.navigate(['/home']);
     }, (error: any) => {
       this.toast.presentToast(error.status.toString() + ' ' + error?.error?.text + ' ' + environment.api, 'danger');
+      this.loaderSvr.showLoader = false
     });
   }
 

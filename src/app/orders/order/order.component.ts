@@ -5,6 +5,7 @@ import { ToastService } from 'src/app/api/toast.service';
 import * as printJS from 'print-js';
 import Printer from 'src/app/directives/printer.plugin';
 import { Capacitor } from '@capacitor/core';
+import { LoaderService } from 'src/app/api/loader.service';
 
 @Component({
   selector: 'app-order',
@@ -19,6 +20,7 @@ export class OrderComponent implements OnInit {
     private orderService: OrdersService,
     private route: ActivatedRoute,
     private toast: ToastService,
+    private loaderSvr: LoaderService
   ) { }
 
   ngOnInit() {
@@ -26,16 +28,20 @@ export class OrderComponent implements OnInit {
       if (params.id === 0 || params.id === '0') {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
       } else {
+        this.loaderSvr.showLoader = true
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
-
-        }, (err: any) => this.toast.presentToast('Не удалось загрузить данные заказа', 'warning'));
+          this.loaderSvr.showLoader = false
+        }, (err: any) => {
+          this.toast.presentToast('Не удалось загрузить данные заказа', 'warning')
+          this.loaderSvr.showLoader = false
+        });
       }
     });
   }
 
   printOrder() {
-    this.toast.presentToast('Загрузка документа...')
+    this.loaderSvr.showLoader = true
     this.orderService.getOrderForm(this.order.id).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
         await Printer.print({ value: res.file });
@@ -51,7 +57,11 @@ export class OrderComponent implements OnInit {
         setTimeout(() => printJS({ printable: 'pdf', type: 'html' }), 1000)
         
       }
-    }, (err: any) => this.toast.presentToast('Не удалось загрузить документ', 'warning'))
+      this.loaderSvr.showLoader = false
+    }, (err: any) => {
+      this.toast.presentToast('Не удалось загрузить документ', 'warning')
+      this.loaderSvr.showLoader = false
+    })
   }
 
 }

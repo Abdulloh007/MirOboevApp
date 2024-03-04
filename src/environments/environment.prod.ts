@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  api: '/erpdev/hs/api',
+  api: '/hs/api',
+  version: 'v.0.1.8'
 };

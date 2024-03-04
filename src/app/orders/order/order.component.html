@@ -20,12 +20,20 @@
               {{ order.date | date: 'dd.MM.yyyy HH:mm' }}
             </ion-label>
           </ion-item>
-          <ion-item lines="none">
+          <ion-item >
             <ion-label>
               Клиент
             </ion-label>
             <ion-label>
               {{ order.client?.name }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Мастер
+            </ion-label>
+            <ion-label>
+              {{ order.master?.name }}
             </ion-label>
           </ion-item>
         </ion-list>
@@ -40,10 +48,14 @@
             <div class="mo-row__wrap">
               <ion-label class="mo-col">
                 <h2>{{ product.title }}</h2>
-                <p>{{ product.price }}смн x {{ product.packCount }}</p>
+                <p>{{ product.price }}смн x {{ product.packCount }} {{product.discount > 0 ? "-" + product.discount + "смн" : ""}}</p>
               </ion-label>
-              <ion-label slot="end" class="ion-text-end mo-col">
+              <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
                 {{ product.price * product.packCount }}смн
+              </ion-label>
+              <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount > 0">
+                <p class="mo-text__overline">{{ product.price * product.packCount }}смн</p>
+                {{ product.total }}смн
               </ion-label>
             </div>
           </ion-item>
@@ -70,7 +82,7 @@
         </ion-list>
       </ion-col>
       <ion-col style="display: flex;" class="ion-justify-content-between">
-        <ion-button style="width: 47%;" routerLink="/orders/edit" [queryParams]="{id: order.id}">
+        <ion-button color="success" style="width: 47%;" routerLink="/orders/edit" [queryParams]="{id: order.id}">
           <ion-icon slot="start" name="create-outline"></ion-icon>
           Изменить
         </ion-button>

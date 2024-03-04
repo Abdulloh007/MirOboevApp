@@ -37,6 +37,11 @@ const routes: Routes = [
     loadChildren: () => import('./return-orders/return-orders.module').then( m => m.ReturnOrdersPageModule),
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'rotation',
+    loadChildren: () => import('./rotation/rotation.module').then( m => m.RotationPageModule),
+    canActivate: [AuthGuardService]
+  },
 ];
 
 @NgModule({

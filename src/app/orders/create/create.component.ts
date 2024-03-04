@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
 import { ClientService } from 'src/app/api/client.service';
 import { LoaderService } from 'src/app/api/loader.service';
+import { MasterService } from 'src/app/api/master.service';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
 import { ToastService } from 'src/app/api/toast.service';
@@ -14,7 +15,9 @@ interface Order {
   comment: string;
   products: Product[];
   sum: number;
+  discountSum: number;
   client?: any;
+  master?: any;
 }
 interface Product {
   id: number | string;
@@ -44,7 +47,8 @@ export class CreateComponent implements OnInit {
     date: new Date(),
     comment: '',
     products: [],
-    sum: 0
+    sum: 0,
+    discountSum: 0
   };
 
   newProduct: any | Product = {
@@ -70,7 +74,9 @@ export class CreateComponent implements OnInit {
   prices: any[] = [];
 
   showClientModal: boolean = false;
+  showMaterModal: boolean = false;
   clientSearchResult: any[] = [];
+  masterSearchResult: any[] = [];
 
   constructor(
     private orderService: OrdersService,
@@ -79,7 +85,8 @@ export class CreateComponent implements OnInit {
     private router: Router,
     private toast: ToastService,
     private loaderSvr: LoaderService,
-    private clientSvr: ClientService
+    private clientSvr: ClientService,
+    private masterSvr: MasterService
   ) { }
 
   ngOnInit() {
@@ -115,11 +122,14 @@ export class CreateComponent implements OnInit {
     let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
     if (processedProd) {
       this.order.sum -= processedProd.total;
+      this.order.discountSum -= processedProd.discount;
       this.countProductTotal();
       processedProd.price = this.newProduct.price;
       processedProd.packCount = this.newProduct.packCount;
       processedProd.total = this.newProduct.total;
+      processedProd.discount = this.newProduct.discount;
       this.order.sum = this.order.sum + processedProd.total;
+      this.order.discountSum = this.order.discountSum + processedProd.discount;
     } else {
       if (this.selectedProd === '') {
         this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
@@ -130,6 +140,7 @@ export class CreateComponent implements OnInit {
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
+      this.order.discountSum += this.newProduct.discount;
       this.selectedProd = '';
     }
     this.newProduct = {
@@ -190,7 +201,13 @@ export class CreateComponent implements OnInit {
   }
 
   countProductTotal() {
-    this.newProduct.total = this.newProduct.price * this.newProduct.packCount;
+    this.newProduct.total = (this.newProduct.price * this.newProduct.packCount) - this.newProduct.discount;
+  }
+
+  countTotalDiscount() {
+    const totalDiscount = 0;
+    this.order.products.map(product => totalDiscount + product.discount);
+    return totalDiscount;
   }
 
   saveOrder() {
@@ -250,7 +267,7 @@ export class CreateComponent implements OnInit {
   getTotalPrice() {
     this.productsService.findOutPrice(this.newProduct.id).subscribe((res: any) => {
       this.prices = res
-      this.newProduct.db_price = `${this.prices[0].price} ${this.prices[0].priceCurrency}`
+      this.newProduct.db_price = `${this.prices[0]?.price ? this.prices[0].price : 0} ${this.prices[0]?.priceCurrency ? this.prices[0].priceCurrency : 'TJS'}`
     })
 
   }
@@ -281,6 +298,10 @@ export class CreateComponent implements OnInit {
     this.showClientModal = isOpen;
   }
 
+  setMasterModal(isOpen: boolean) {
+    this.showMaterModal = isOpen;
+  }
+
   toggleInfo(event: any) {
     if (event.target.localName === 'ion-button') {
       event.target.classList.toggle('show');
@@ -299,9 +320,25 @@ export class CreateComponent implements OnInit {
     }
   }
 
+  searchMaster(event: any) {
+    if (event.target.value.length >= 3) {   
+      this.masterSvr.searchMaster(event.target.value).subscribe((res: any) => {
+        this.masterSearchResult = res;
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.masterSearchResult = [];
+    }
+  }
+
   setClient(client: any) {
     this.order.client = client;
     this.setClientModal(false)
     this.clientSearchResult = []
+  }
+
+  setMater(master: any) {
+    this.order.master = master;
+    this.setMasterModal(false)
+    this.masterSearchResult = []
   }
 }

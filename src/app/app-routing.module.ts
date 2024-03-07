@@ -42,6 +42,10 @@ const routes: Routes = [
     loadChildren: () => import('./rotation/rotation.module').then( m => m.RotationPageModule),
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'income',
+    loadChildren: () => import('./income/income.module').then( m => m.IncomePageModule)
+  },
 ];
 
 @NgModule({

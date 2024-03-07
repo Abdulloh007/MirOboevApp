@@ -7,26 +7,9 @@ import { MasterService } from 'src/app/api/master.service';
 import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
 import { ToastService } from 'src/app/api/toast.service';
+import { Order } from 'src/app/interfaces/Order';
+import { Product } from 'src/app/interfaces/Product';
 
-interface Order {
-  id: number | string;
-  link: string;
-  date: string | Date;
-  comment: string;
-  products: Product[];
-  sum: number;
-  discountSum: number;
-  client?: any;
-  master?: any;
-}
-interface Product {
-  id: number | string;
-  title: string;
-  price: number;
-  packCount: number;
-  discount: number;
-  total: number;
-}
 
 @Component({
   selector: 'app-create',

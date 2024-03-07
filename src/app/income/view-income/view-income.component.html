@@ -1,0 +1,59 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>ПКО №{{income.id}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                Дата
+              </ion-label>
+              <ion-label class="mo-col">
+                {{ income.date | date: 'dd.MM.yyyy HH:mm' }}
+              </ion-label>
+            </div>
+          </ion-item>
+          <ion-item>
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                Клиент
+              </ion-label>
+              <ion-label class="mo-col">
+                {{ income.client.name }}
+              </ion-label>
+            </div>
+          </ion-item>
+          <ion-item>
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                Основание
+              </ion-label>
+              <ion-label class="mo-col">
+                {{ income.base_document === null ? "Нет" : income.base_document?.link }}
+              </ion-label>
+            </div>
+          </ion-item>
+          <ion-item lines="none">
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                Сумма
+              </ion-label>
+              <ion-label class="mo-col">
+                {{ income.sum }} {{ income.currency }}
+              </ion-label>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

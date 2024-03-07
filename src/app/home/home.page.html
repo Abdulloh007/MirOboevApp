@@ -27,7 +27,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" disabled expand="block" routerLink="/find-out/price">
+        <ion-button color="success" [disabled]="userRole.degree > 3" expand="block" routerLink="/income">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="cash"></ion-icon>
             Поступление <br> в кассу

@@ -44,7 +44,7 @@ export class AuthPage implements OnInit {
       localStorage.setItem('role', JSON.stringify(data.role));
 
       this.loaderSvr.showLoader = false
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).then(() => location.reload());
     }, (error: any) => {
       this.toast.presentToast(error.status.toString() + ' ' + error?.error?.text + ' ' + environment.api, 'danger');
       this.loaderSvr.showLoader = false

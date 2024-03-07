@@ -16,7 +16,7 @@
             </ion-button>
           </ion-item>
           <ion-item>
-            <ion-button fill="clear" (click)="newServer()">
+            <ion-button color="success" fill="clear" (click)="newServer()">
               <ion-icon name="add-sharp" slot="start"></ion-icon>
               Добавить сервер
             </ion-button>
@@ -41,7 +41,7 @@
             <ion-input type="text" autofocus="true" [(ngModel)]="handlingServer"></ion-input>
           </ion-item>
           <ion-item lines="none">
-            <ion-button class="auth__btn" expand="block" (click)="saveServer()">Сохранить</ion-button>
+            <ion-button color="success" class="auth__btn" expand="block" (click)="saveServer()">Сохранить</ion-button>
           </ion-item>
         </ion-list>
       </ion-col>
@@ -63,10 +63,10 @@
             <ion-input type="password" [(ngModel)]="password" (keyup.enter)="loginUser($event)"></ion-input>
           </ion-item>
           <ion-item lines="none">
-            <ion-button class="auth__btn" expand="block" (click)="loginUser()">Войти</ion-button>
+            <ion-button color="success" class="auth__btn" expand="block" (click)="loginUser()">Войти</ion-button>
           </ion-item>
         </ion-list>
-        <ion-button fill="clear" (click)="setAction('SELECT_SERVER')">Выбрать Сервер</ion-button>
+        <ion-button fill="clear" color="success" (click)="setAction('SELECT_SERVER')">Выбрать Сервер</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

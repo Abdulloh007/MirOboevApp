@@ -81,7 +81,7 @@
           </ion-item>
         </ion-list>
       </ion-col>
-      <ion-col style="display: flex;" class="ion-justify-content-between">
+      <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
         <ion-button color="success" style="width: 47%;" routerLink="/orders/edit" [queryParams]="{id: order.id}">
           <ion-icon slot="start" name="create-outline"></ion-icon>
           Изменить
@@ -89,6 +89,12 @@
         <ion-button style="width: 47%;" color="dark" (click)="printOrder()">
           <ion-icon slot="start" name="print-outline"></ion-icon>
           Печать
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button color="warning" routerLink="/income/create" style="width: 100%;" [queryParams]="{base: order.id}">
+          <ion-icon slot="start" name="cash-outline"></ion-icon>
+          Создать на основании
         </ion-button>
       </ion-col>
     </ion-row>

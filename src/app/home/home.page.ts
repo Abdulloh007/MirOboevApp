@@ -10,7 +10,7 @@ import { Role } from '../interfaces/Role';
 export class HomePage implements OnInit{
   userRole: Role = {
     name: '',
-    degree: 0
+    degree: 99999
   }
 
   constructor() {}

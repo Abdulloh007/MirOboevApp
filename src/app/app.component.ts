@@ -14,7 +14,7 @@ export class AppComponent implements OnInit{
   userAccount: string = 'Меню'
   userRole: Role = {
     name: '',
-    degree: 0
+    degree: 99999
   }
 
   constructor(

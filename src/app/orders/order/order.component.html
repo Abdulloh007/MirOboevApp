@@ -91,10 +91,10 @@
           Печать
         </ion-button>
       </ion-col>
-      <ion-col size="12">
+      <ion-col size="12" *ngIf="userRole.degree <= 3">
         <ion-button color="warning" routerLink="/income/create" style="width: 100%;" [queryParams]="{base: order.id}">
           <ion-icon slot="start" name="cash-outline"></ion-icon>
-          Создать на основании
+          Создать поступление
         </ion-button>
       </ion-col>
     </ion-row>

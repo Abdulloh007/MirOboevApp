@@ -6,6 +6,7 @@ import * as printJS from 'print-js';
 import Printer from 'src/app/directives/printer.plugin';
 import { Capacitor } from '@capacitor/core';
 import { LoaderService } from 'src/app/api/loader.service';
+import { Role } from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-order',
@@ -16,6 +17,10 @@ export class OrderComponent implements OnInit {
   @ViewChild('pdf', { static: true }) pdfViewer!: ElementRef | any;
   order: any = {};
   pdfUrl: any;
+  userRole: Role = {
+    name: '',
+    degree: 99999
+  }
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
@@ -24,6 +29,7 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (localStorage.getItem('role')) this.userRole = JSON.parse(localStorage.getItem('role') || JSON.stringify(this.userRole)) 
     this.route.queryParams.subscribe((params: any) => {
       if (params.id === 0 || params.id === '0') {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');

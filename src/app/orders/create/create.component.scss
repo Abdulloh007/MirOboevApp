@@ -62,11 +62,8 @@ ion-item {
         margin-left: auto;
 
         &:first-child {
-            width: 45%;
+            width: 40%;
             margin-left: 0;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
         }
 
         &:last-child {
@@ -78,6 +75,14 @@ ion-item {
                 --padding-start: 0;
                 --padding-end: 0
             }
+        }
+    }
+
+    &.balance >.mo-col {
+        &:first-child {
+            border-right: 1px solid;
+            padding-top: 15px;
+            padding-bottom: 15px;
         }
     }
 }

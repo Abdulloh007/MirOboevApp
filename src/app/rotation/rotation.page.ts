@@ -16,7 +16,6 @@ export class RotationPage implements OnInit {
   userList: UserRotation[] = []
   selectedUser: UserRotation = {
     name: '',
-    fullname: '',
     subdivision: ''
   }
   showUserModal: boolean = false
@@ -43,6 +42,16 @@ export class RotationPage implements OnInit {
     }, (err: any) => this.toast.presentToast('Не удалось загрузить шаблоны ротаций', 'warning'))
   }
 
+  handleRefresh(e: any) {
+    this.userSvr.getUsers().subscribe((data: any) => {
+      this.userList = data;
+      e.target.complete();
+    }, (err: any) => {
+      this.toast.presentToast('Не удалось загрузить пользователей', 'warning')
+      e.target.complete();
+    })
+  }
+
   selectUser(user: UserRotation) {
     this.selectedUser = user
     this.showUserModal = true
@@ -62,7 +71,6 @@ export class RotationPage implements OnInit {
       this.showUserModal = false
       this.toast.presentToast('Пользователь успешно ротирован(а) на ' + this.selectedRotation.name)
       this.selectedUser = {
-        fullname: '',
         name: '',
         subdivision: ''
       }
@@ -76,5 +84,17 @@ export class RotationPage implements OnInit {
       this.showUserModal = false
     })
     return
+  }
+
+  cancelModal() {
+    this.showUserModal = false
+    this.selectedUser = {
+      name: '',
+      subdivision: ''
+    }
+    this.selectedRotation = {
+      id: '',
+      name: ''
+    }
   }
 }

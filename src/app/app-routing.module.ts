@@ -46,6 +46,10 @@ const routes: Routes = [
     path: 'income',
     loadChildren: () => import('./income/income.module').then( m => m.IncomePageModule)
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+  },
 ];
 
 @NgModule({

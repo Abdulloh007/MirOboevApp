@@ -39,7 +39,7 @@ export class BalanceComponent  implements OnInit {
   findOutBalance() {
     this.productsService.findOutBalance(this.activeProduct).subscribe((res: any) => {
       this.setOpen(true);
-      this.productBalance = res;
+      this.productBalance = res.allStorages;
       this.activeProduct = '';
     }, (err: any) => this.toast.presentToast('Не удалось загрузить данные', 'warning'));
   }

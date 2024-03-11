@@ -25,7 +25,7 @@ export class OrdersPage implements OnInit {
       this.orders = res
       this.loaderSvr.showLoader = false
     }, (err: any) => {
-      this.toast.presentToast('Что-то пощло не так!', 'danger')
+      this.toast.presentToast('Не удалось загрузить список заказов!', 'danger')
       this.loaderSvr.showLoader = false
     })
 
@@ -40,7 +40,8 @@ export class OrdersPage implements OnInit {
       this.orders = res
       e.target.complete();
     }, (err: any) => {
-      this.toast.presentToast('Не удалось обновить данные!', 'danger')
+      this.toast.presentToast('Не удалось загрузить список заказов!', 'danger')
+      e.target.complete();
     })
 
   }

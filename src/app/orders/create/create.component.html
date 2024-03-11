@@ -120,9 +120,9 @@
             <ion-label position="floating">Количество</ion-label>
             <ion-input [min]="0" (input)="countProductTotal()" [clearOnEdit]="true" type="number"
               [(ngModel)]="newProduct.packCount"></ion-input>
-            <ion-button color="success" (click)="toggleInfo($event)" fill="clear" class="mo-prompt">
+            <ion-button color="dark" (click)="toggleInfo($event)" fill="clear" class="mo-prompt show">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <span>{{ newProduct.db_balance }}</span>
+              <p> <span class="my">{{productMyBalance?.balance}}</span> / <span class="all">{{ newProduct.db_balance }}</span> </p>
             </ion-button>
           </ion-item>
           <ion-item>

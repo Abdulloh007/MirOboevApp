@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <ion-list lines="full">
     <ion-item button (click)="selectUser(user)" *ngFor="let user of userList">{{ user.name }}</ion-item>
   </ion-list>
@@ -16,6 +20,9 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelModal()" [strong]="true">Отмена</ion-button>
+          </ion-buttons>
           <ion-title>{{selectedUser.name}}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="confirmModal()" [strong]="true">Ok</ion-button>

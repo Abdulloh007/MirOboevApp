@@ -29,7 +29,7 @@ export class AppComponent implements OnInit{
     }
     if (localStorage.getItem('account')) this.userAccount = localStorage.getItem('account') || 'Меню'
     if (localStorage.getItem('role')) this.userRole = JSON.parse(localStorage.getItem('role') || JSON.stringify(this.userRole)) 
-    if (localStorage.getItem('version') !== environment.version) {
+    if (localStorage.getItem('version') !== environment.version && localStorage.getItem('account')) {
       this.appSrv.setAppVersion().subscribe(res => {
         localStorage.setItem('version', environment.version)
       })
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit{
     localStorage.removeItem('orderDraft')
     localStorage.removeItem('account')
     localStorage.removeItem('role')
+    localStorage.removeItem('version')
     location.reload() 
   }
   

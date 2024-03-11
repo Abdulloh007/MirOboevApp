@@ -53,6 +53,7 @@ export class CreateComponent implements OnInit {
   isModalOpen: boolean = false;
   modalAddonTitle: string = '';
   productBalance: any[] = [];
+  productMyBalance: any
   isPriceOpen: boolean = false;
   prices: any[] = [];
 
@@ -242,7 +243,8 @@ export class CreateComponent implements OnInit {
     this.modalAddonTitle = this.activeProduct;
     this.productsService.findOutBalance(this.activeProductId).subscribe((res: any) => {
       this.setOpen(true);
-      this.productBalance = res;
+      this.productBalance = res.allStorages;
+      this.productMyBalance = res.myStorage;
       this.activeProduct = '';
     }, (err: any) => this.toast.presentToast('Не удалось загрузить данные', 'warning'));
   }
@@ -257,7 +259,8 @@ export class CreateComponent implements OnInit {
 
   getTotalBalance() {
     this.productsService.findOutBalance(this.newProduct.id).subscribe((res: any) => {
-      this.productBalance = res
+      this.productBalance = res.allStorages
+      this.productMyBalance = res.myStorage
       this.newProduct.db_balance = this.getLocalBalnace()
     })
 

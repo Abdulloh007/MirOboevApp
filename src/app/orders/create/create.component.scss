@@ -92,15 +92,24 @@ ion-item {
     top: 15px;
     right: 5px;
     z-index: 10;
-    span {
+    font-size: 14px;
+    p {
         display: none;
         margin: 0;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     &.show {
-        span {
+        p {
             display: block;
+
+            & .my {
+                color: var(--ion-color-primary);
+            }
+
+            & .all {
+                color: var(--ion-color-danger);
+            }
         }
         ion-icon {
             display: none;

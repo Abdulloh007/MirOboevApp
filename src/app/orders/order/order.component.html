@@ -91,13 +91,40 @@
           Печать
         </ion-button>
       </ion-col>
-      <ion-col size="12" *ngIf="userRole.degree <= 3">
-        <ion-button color="warning" routerLink="/income/create" style="width: 100%;" [queryParams]="{base: order.id}">
+      <ion-col size="12" *ngIf="userRole.degree <= 3" style="display: flex;" class="ion-justify-content-between">
+        <ion-button color="warning" routerLink="/income/create" style="width: 47%;" [queryParams]="{base: order.id}">
           <ion-icon slot="start" name="cash-outline"></ion-icon>
-          Создать поступление
+          ввод оплаты
         </ion-button>
+        <ion-button (click)="setShowPrinter(true)" style="width: 47%;" color="danger" >
+          <ion-icon slot="start" name="print-outline"></ion-icon>
+          Печать IP
+        </ion-button>
+      </ion-col>
+      <ion-col>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-modal [isOpen]="showPrinterList">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setShowPrinter(false)">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>Выберите печать</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content >
+        <ion-list lines="full">
+          <ion-item *ngIf="printerList.length === 0">
+            <ion-label >Пусто</ion-label>
+          </ion-item>
+          <ion-item button (click)="printTest(printer)" *ngFor="let printer of printerList">{{ printer.name }}</ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 <pdf-viewer id="pdf" #pdf class="for-print" [src]="pdfUrl" [render-text]="true"></pdf-viewer>

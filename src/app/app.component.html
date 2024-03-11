@@ -10,6 +10,7 @@
         <ion-list lines="full" >
           <ion-item routerLink="/home">Главная</ion-item>
           <ion-item routerLink="/rotation" *ngIf="userRole.degree <= 3">Ротация</ion-item>
+          <ion-item routerLink="/settings" >Настройки</ion-item>
         </ion-list>
         <ion-button color="success" (click)="exitAccount()" class="mo-exit__btn">
           <ion-icon slot="start" name="exit-outline"></ion-icon>

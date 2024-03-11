@@ -7,6 +7,7 @@ import Printer from 'src/app/directives/printer.plugin';
 import { Capacitor } from '@capacitor/core';
 import { LoaderService } from 'src/app/api/loader.service';
 import { Role } from 'src/app/interfaces/Role';
+import { Printer as PrinterInterface } from 'src/app/interfaces/Printer';
 
 @Component({
   selector: 'app-order',
@@ -21,6 +22,9 @@ export class OrderComponent implements OnInit {
     name: '',
     degree: 99999
   }
+  printerList: PrinterInterface[] = []
+  showPrinterList: boolean = false
+
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
@@ -68,6 +72,34 @@ export class OrderComponent implements OnInit {
       this.toast.presentToast('Не удалось загрузить документ', 'warning')
       this.loaderSvr.showLoader = false
     })
+  }
+
+  async printTest(printer: PrinterInterface) {
+    this.orderService.getOrderForm(this.order.id).subscribe(async (res: any) => {
+      if (Capacitor.isNativePlatform()) {
+        await Printer.printTest({ ...printer, value: res.file }).then((res: any) => this.toast.presentToast(res?.value));
+      }else {
+        const blobData = atob(res.file);
+        const uintArray = new Uint8Array(blobData.length);
+        for (let i = 0; i < blobData.length; i++) {
+          uintArray[i] = blobData.charCodeAt(i);
+        }
+        const blob = new Blob([uintArray], { type: 'application/octet-stream' });
+        this.pdfUrl = URL.createObjectURL(blob);
+        setTimeout(() => printJS({ printable: 'pdf', type: 'html' }), 1000)
+        
+      }
+      this.loaderSvr.showLoader = false;
+
+    }, (err: any) => {
+      this.toast.presentToast('Не удалось загрузить документ', 'warning')
+      this.loaderSvr.showLoader = false
+    })
+  }
+
+  setShowPrinter(isOpen: boolean) {
+    this.printerList = JSON.parse(localStorage.getItem('printers') || '[]')
+    this.showPrinterList = isOpen
   }
 
 }

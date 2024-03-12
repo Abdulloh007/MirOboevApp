@@ -97,6 +97,7 @@ ion-item {
         display: none;
         margin: 0;
         font-size: 14px;
+        pointer-events: none;
     }
 
     &.show {

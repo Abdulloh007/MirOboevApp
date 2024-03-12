@@ -75,9 +75,16 @@ export class OrderComponent implements OnInit {
   }
 
   async printTest(printer: PrinterInterface) {
+    this.loaderSvr.showLoader = true
     this.orderService.getOrderForm(this.order.id).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
-        await Printer.printTest({ ...printer, value: res.file }).then((res: any) => this.toast.presentToast(res?.value));
+        await Printer.printTest({ ...printer, value: res.file })
+        .then((res: any) => this.toast.presentToast(res?.status), (err: any) => this.toast.presentToast(err?.status, 'danger'))
+        .catch((err: any) => this.toast.presentToast(err?.status, 'danger'))
+        .finally(() => {
+          this.showPrinterList = false
+          this.loaderSvr.showLoader = true
+        });
       }else {
         const blobData = atob(res.file);
         const uintArray = new Uint8Array(blobData.length);

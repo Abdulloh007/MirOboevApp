@@ -91,8 +91,8 @@
           Печать
         </ion-button>
       </ion-col>
-      <ion-col size="12" *ngIf="userRole.degree <= 3" style="display: flex;" class="ion-justify-content-between">
-        <ion-button color="warning" routerLink="/income/create" style="width: 47%;" [queryParams]="{base: order.id}">
+      <ion-col size="12"  style="display: flex;" class="ion-justify-content-between">
+        <ion-button *ngIf="userRole.degree <= 3" color="warning" routerLink="/income/create" style="width: 47%;" [queryParams]="{base: order.id}">
           <ion-icon slot="start" name="cash-outline"></ion-icon>
           ввод оплаты
         </ion-button>

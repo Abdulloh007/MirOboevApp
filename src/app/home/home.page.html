@@ -27,7 +27,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" [disabled]="userRole.degree > 3" expand="block" routerLink="/income">
+        <ion-button color="success" *ngIf="userRole.degree > 3" expand="block" routerLink="/income">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="cash"></ion-icon>
             Поступление <br> в кассу
@@ -35,7 +35,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" disabled expand="block" routerLink="/move-orders">
+        <ion-button color="success" *ngIf="userRole.degree > 3" disabled expand="block" routerLink="/move-orders">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="send"></ion-icon>
             Перемещение
@@ -43,7 +43,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" disabled expand="block" routerLink="/return-orders">
+        <ion-button color="success" *ngIf="userRole.degree > 3" disabled expand="block" routerLink="/return-orders">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="arrow-undo"></ion-icon>
             Возврат
@@ -51,7 +51,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" disabled expand="block" routerLink="/">
+        <ion-button color="success" *ngIf="userRole.degree > 3" disabled expand="block" routerLink="/">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="documents"></ion-icon>
             Заказы <br> поставщикам

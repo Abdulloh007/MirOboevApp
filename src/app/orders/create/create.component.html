@@ -113,7 +113,7 @@
         <ion-list lines="full">
           <ion-item>
             <ion-label position="floating">Наименование</ion-label>
-            <ion-input (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
+            <ion-input [clearOnEdit]="true" (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
               helperText="Введите больше трех символов для подсказки"></ion-input>
           </ion-item>
           <ion-item>
@@ -131,7 +131,7 @@
               [(ngModel)]="newProduct.price"></ion-input>
             <ion-button color="success" (click)="toggleInfo($event)" fill="clear" class="mo-prompt">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <span>{{ newProduct.db_price }}</span>
+              <p><span>{{ newProduct.db_price }}</span></p>
             </ion-button>
           </ion-item>
           <ion-item>

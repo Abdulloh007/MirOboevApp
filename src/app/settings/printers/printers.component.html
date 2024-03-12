@@ -19,7 +19,10 @@
           <ion-item >
             <ion-button fill="clear" (click)="setShowPrinter(true)" color="success">Добавить принтер</ion-button></ion-item>
           <ion-item *ngFor="let printer of printerList">
-            <ion-label slot="start">{{ printer.name }}</ion-label>
+            <ion-label slot="start">
+              <h4>{{ printer.name }}</h4>
+              <p>{{ printer.host }}:{{ printer.port }}</p>
+            </ion-label>
             <ion-icon (click)="deletePrinter(printer)" size="small" color="danger" name="trash-outline" slot="end"></ion-icon>
           </ion-item>
         </ion-list>
@@ -52,7 +55,7 @@
           </ion-item>
           <ion-item lines="none">
             <ion-label position="floating">Порт</ion-label>
-            <ion-input [min]="80" type="text" [(ngModel)]="newPrinter.port"></ion-input>
+            <ion-input [clearOnEdit]="true" [min]="80" type="text" [(ngModel)]="newPrinter.port"></ion-input>
           </ion-item>
         </ion-list>
       </ion-content>

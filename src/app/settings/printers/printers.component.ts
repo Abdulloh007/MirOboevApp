@@ -48,9 +48,10 @@ export class PrintersComponent implements OnInit {
     this.showPrinter = isOpen
     this.printerList = JSON.parse(localStorage.getItem('printers') || '[]')
   }
-
+  
   deletePrinter(printer: Printer) {
-    this.printerList = this.printerList.filter(printer => printer !== printer)
+    this.printerList = this.printerList.filter(item => item !== printer)
     localStorage.setItem('printers', JSON.stringify(this.printerList))
+    this.printerList = JSON.parse(localStorage.getItem('printers') || '[]')
   }
 }

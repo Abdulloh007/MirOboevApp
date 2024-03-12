@@ -52,19 +52,20 @@ public class PrinterPlugin extends Plugin {
     String base64Value = call.getString("value");
     byte[] decodedBytes = Base64.decode(base64Value, Base64.NO_WRAP);
 
+
     JSObject ret = new JSObject();
     try {
-      Socket sock = new Socket(host, port);
+      Socket sock = new Socket(host, Integer.valueOf(9100));
       OutputStream outputStream = sock.getOutputStream();
       outputStream.write(decodedBytes);
       outputStream.close();
       sock.close();
-      ret.put("status", "Success");
-} catch (IOException e) {
-  ret.put("status", e.getMessage());
-  } finally {
-  call.resolve(ret);
-  }
+      ret.put("status", "Печать запущена...");
+    } catch (IOException e) {
+      ret.put("status", e.getMessage());
+    } finally {
+      call.resolve(ret);
+    }
   }
 
 }

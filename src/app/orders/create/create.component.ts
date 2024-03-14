@@ -188,6 +188,10 @@ export class CreateComponent implements OnInit {
     this.newProduct.total = (this.newProduct.price * this.newProduct.packCount) - this.newProduct.discount;
   }
 
+  recountProductTotal() {
+    this.newProduct.price = (this.newProduct.total + this.newProduct.discount) / this.newProduct.packCount
+  }
+
   countTotalDiscount() {
     const totalDiscount = 0;
     this.order.products.map(product => totalDiscount + product.discount);

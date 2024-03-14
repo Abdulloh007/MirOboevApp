@@ -140,7 +140,9 @@
               [(ngModel)]="newProduct.discount"></ion-input>
           </ion-item>
           <ion-item lines="none">
-            <ion-label>
+            <ion-label position="floating">Итого</ion-label>
+            <ion-input [min]="0" (input)="recountProductTotal()" type="number" [(ngModel)]="newProduct.total"></ion-input>
+            <!-- <ion-label>
               <h2>Итого</h2>
             </ion-label>
             <ion-label slot="end" class="ion-text-end" *ngIf="newProduct.discount <= 0">
@@ -149,7 +151,7 @@
             <ion-label slot="end" class="ion-text-end" *ngIf="newProduct.discount > 0">
               <p class="mo-text__overline">{{ newProduct.packCount * newProduct.price }}смн</p>
               {{ newProduct.total }}смн
-            </ion-label>
+            </ion-label> -->
           </ion-item>
         </ion-list>
         <div class="mo-data__options" *ngIf="searchResult.length > 0">

@@ -13,3 +13,36 @@ h1.logo__title {
         margin-bottom: 10px;
     }
 }
+
+
+ion-item {
+    --border-color: var(--ion-color-step-600)
+}
+
+.mo-prod__row {
+
+    &>.mo-col {
+        display: block;
+        width: 30%;
+        margin: auto;
+
+        &:first-child {
+            width: 40%;
+            margin-left: 0;
+        }
+
+        &:last-child {
+            text-align: center;
+            width: 20%;
+            margin-right: 0;
+        }
+    }
+
+    &.balance >.mo-col {
+        &:first-child {
+            border-right: 1px solid;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+    }
+}

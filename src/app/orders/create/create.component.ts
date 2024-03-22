@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
+import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { CameraService } from 'src/app/api/camera.service';
 import { ClientService } from 'src/app/api/client.service';
 import { LoaderService } from 'src/app/api/loader.service';
 import { MasterService } from 'src/app/api/master.service';
@@ -9,6 +11,7 @@ import { ProductsService } from 'src/app/api/products.service';
 import { ToastService } from 'src/app/api/toast.service';
 import { Order } from 'src/app/interfaces/Order';
 import { Product } from 'src/app/interfaces/Product';
+import { Capacitor } from '@capacitor/core';
 
 
 @Component({
@@ -42,7 +45,8 @@ export class CreateComponent implements OnInit {
     discount: 0,
     total: 0,
     db_price: 0,
-    db_balance: 0
+    db_balance: 0,
+    isMeter: false
   };
 
   searchResult: any[] = [];
@@ -57,11 +61,14 @@ export class CreateComponent implements OnInit {
   isPriceOpen: boolean = false;
   prices: any[] = [];
 
+  showMeter: boolean = false
   showClientModal: boolean = false;
   showMaterModal: boolean = false;
   clientSearchResult: any[] = [];
   masterSearchResult: any[] = [];
 
+  isSupported = false;
+  barcodes: Barcode[] = [];
   constructor(
     private orderService: OrdersService,
     private productsService: ProductsService,
@@ -74,6 +81,12 @@ export class CreateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (Capacitor.isNativePlatform()) {
+      BarcodeScanner.isSupported().then((result) => {
+        this.isSupported = result.supported;
+      });
+    }
+
     this.route.queryParams.subscribe((params: any) => {
       if (params.id !== undefined && (params.id === 0 || params.id === '0')) {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
@@ -93,8 +106,10 @@ export class CreateComponent implements OnInit {
       price: 0,
       packCount: 0,
       discount: 0,
-      total: 0
+      total: 0,
+      isMeter: false
     };
+    this.showMeter = false;
     this.searchResult = [];
     this.selectedProd = '';
     this.autoSaveOnLocalStorage();
@@ -140,6 +155,17 @@ export class CreateComponent implements OnInit {
     this.autoSaveOnLocalStorage();
     this.modal.isOpen = false;
     this.modal.dismiss(null, 'confirm');
+  }
+
+  setProd(prod: any) {
+    this.selectedProd = prod.name; 
+    this.newProduct.title = prod.name; 
+    this.newProduct.id = prod.id; 
+    this.newProduct.isMeter = prod.isMeter; 
+    this.showMeter = prod.isMeter; 
+    this.searchResult = []; 
+    this.getTotalPrice(); 
+    this.getTotalBalance()
   }
 
   removeProduct(title: string) {
@@ -190,6 +216,7 @@ export class CreateComponent implements OnInit {
 
   recountProductTotal() {
     this.newProduct.price = (this.newProduct.total + this.newProduct.discount) / this.newProduct.packCount
+    this.newProduct.price = this.newProduct.price.toFixed(2)
   }
 
   countTotalDiscount() {
@@ -265,7 +292,7 @@ export class CreateComponent implements OnInit {
     this.productsService.findOutBalance(this.newProduct.id).subscribe((res: any) => {
       this.productBalance = res.allStorages
       this.productMyBalance = res.myStorage
-      this.newProduct.db_balance = this.getLocalBalnace()
+      this.newProduct.db_balance = this.getLocalBalnace().toFixed(2)
     })
 
   }
@@ -301,7 +328,7 @@ export class CreateComponent implements OnInit {
   }
 
   searchClient(event: any) {
-    if (event.target.value.length >= 3) {   
+    if (event.target.value.length >= 3) {
       this.clientSvr.searchClient(event.target.value).subscribe((res: any) => {
         this.clientSearchResult = res;
       }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
@@ -311,7 +338,7 @@ export class CreateComponent implements OnInit {
   }
 
   searchMaster(event: any) {
-    if (event.target.value.length >= 3) {   
+    if (event.target.value.length >= 3) {
       this.masterSvr.searchMaster(event.target.value).subscribe((res: any) => {
         this.masterSearchResult = res;
       }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
@@ -330,5 +357,40 @@ export class CreateComponent implements OnInit {
     this.order.master = master;
     this.setMasterModal(false)
     this.masterSearchResult = []
+  }
+
+  async scan(): Promise<void> {
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.presentAlert();
+      return;
+    }
+    const { barcodes } = await BarcodeScanner.scan();
+    this.barcodes.push(...barcodes);
+    this.qrHandler()
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
+
+  async presentAlert(): Promise<void> {
+    this.toast.presentToast('Please grant camera permission to use the barcode scanner.', 'warning');
+  }
+
+  async qrHandler() {
+    const barcode = this.barcodes[0]
+    if (barcode.rawValue.includes("hs/ver1/products?shkod=")) {
+      const prodId = barcode.rawValue.split('=')[1];
+      this.loaderSvr.showLoader = true;
+      this.productsService.getProductById(prodId).subscribe((res: any) => {
+        this.prepareAction('add');
+        this.modal.isOpen = true;
+        this.setProd(res)
+      }, () => this.toast.presentToast("Неудалось найти продукт!"),
+      () => this.loaderSvr.showLoader = false)
+    } 
+    this.barcodes = []
   }
 }

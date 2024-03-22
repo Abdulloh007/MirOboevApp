@@ -117,3 +117,13 @@ ion-item {
         }
     }
 }
+
+.mo-meter-switch {
+    display: flex;
+    align-items: center;
+    
+    span {
+        display: block;
+        margin: auto 10px;
+    }
+}

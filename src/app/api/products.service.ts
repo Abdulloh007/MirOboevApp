@@ -23,6 +23,16 @@ export class ProductsService {
     })
   }
 
+  getProductById(id: string) {
+    return this.http.get(this.hostControlSvr.defineHost() + '/s-id/' + id, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
   findOutPrice(number: number | string) {
     return this.http.get(this.hostControlSvr.defineHost() + '/find-out-price/' + number, {
       headers: {

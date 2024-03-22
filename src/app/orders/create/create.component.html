@@ -17,11 +17,13 @@
         <ion-list lines="full">
           <ion-item>
             <ion-label slot="start">Клиент</ion-label>
-            <ion-button fill="clear" color="success" (click)="setClientModal(true)">{{ order.client ? order.client.name : 'Розничный покупатель' }}</ion-button>
+            <ion-button fill="clear" color="success" (click)="setClientModal(true)">{{ order.client ? order.client.name
+              : 'Розничный покупатель' }}</ion-button>
           </ion-item>
           <ion-item lines="none">
             <ion-label slot="start">Мастер</ion-label>
-            <ion-button fill="clear" color="success" (click)="setMasterModal(true)">{{ order.master ? order.master.name : 'Без мастера' }}</ion-button>
+            <ion-button fill="clear" color="success" (click)="setMasterModal(true)">{{ order.master ? order.master.name
+              : 'Без мастера' }}</ion-button>
           </ion-item>
         </ion-list>
       </ion-col>
@@ -35,7 +37,8 @@
           <ion-item class="mo-prod__row" *ngFor="let product of order.products">
             <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
               <h2 class="mo-wrap__text">{{ product.title }}</h2>
-              <p>{{ product.packCount }} x {{ product.price }}смн {{product.discount > 0 ? "-" + product.discount + "смн" : ""}} </p>
+              <p>{{ product.packCount }} x {{ product.price }}смн {{product.discount > 0 ? "-" + product.discount +
+                "смн" : ""}} </p>
             </ion-label>
             <ion-label class="mo-col ion-text-end" *ngIf="product.discount === 0">
               {{ product.total }}смн
@@ -56,17 +59,21 @@
 
           <ion-item>
             <ion-label>
-              <ion-button color="success" (click)="prepareAction('add'); modal.isOpen = true" slot="center" fill="clear">
+              <ion-button color="success" (click)="prepareAction('add'); modal.isOpen = true" slot="center"
+                fill="clear">
                 Добавить товар
                 <ion-icon name="add-outline"></ion-icon>
               </ion-button>
             </ion-label>
+            <ion-button color="success" slot="end" fill="clear" (click)="scan()">
+              <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
+            </ion-button>
           </ion-item>
           <ion-item lines="none">
             <ion-label>
               <h2>Итого</h2>
             </ion-label>
-            <ion-label slot="end" class="ion-text-end" >
+            <ion-label slot="end" class="ion-text-end">
               {{ order.sum }}смн
             </ion-label>
           </ion-item>
@@ -116,13 +123,21 @@
             <ion-input [clearOnEdit]="true" (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
               helperText="Введите больше трех символов для подсказки"></ion-input>
           </ion-item>
+          <ion-item *ngIf="showMeter">
+            <ion-label class="mo-meter-switch">
+              <span>Рулон</span>
+              <ion-toggle [(ngModel)]="newProduct.isMeter"></ion-toggle>
+              <span>Метр</span>
+            </ion-label>
+          </ion-item>
           <ion-item>
             <ion-label position="floating">Количество</ion-label>
             <ion-input [min]="0" (input)="countProductTotal()" [clearOnEdit]="true" type="number"
               [(ngModel)]="newProduct.packCount"></ion-input>
             <ion-button color="dark" (click)="toggleInfo($event)" fill="clear" class="mo-prompt show">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <p> <span class="my">{{productMyBalance?.balance}}</span> / <span class="all">{{ newProduct.db_balance }}</span> </p>
+              <p> <span class="my">{{productMyBalance?.balance}}</span> / <span class="all">{{ newProduct.db_balance
+                  }}</span> </p>
             </ion-button>
           </ion-item>
           <ion-item>
@@ -136,28 +151,18 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Скидка (Сумма)</ion-label>
-            <ion-input [min]="0" (input)="countProductTotal()" (ionChange)="this.newProduct.discount === null ? this.newProduct.discount = 0 : ''" type="number" [clearOnEdit]="true"
-              [(ngModel)]="newProduct.discount"></ion-input>
+            <ion-input [min]="0" (input)="countProductTotal()"
+              (ionChange)="this.newProduct.discount === null ? this.newProduct.discount = 0 : ''" type="number"
+              [clearOnEdit]="true" [(ngModel)]="newProduct.discount"></ion-input>
           </ion-item>
           <ion-item lines="none">
             <ion-label position="floating">Итого</ion-label>
-            <ion-input [min]="0" (input)="recountProductTotal()" type="number" [(ngModel)]="newProduct.total"></ion-input>
-            <!-- <ion-label>
-              <h2>Итого</h2>
-            </ion-label>
-            <ion-label slot="end" class="ion-text-end" *ngIf="newProduct.discount <= 0">
-              {{ newProduct.total }}смн
-            </ion-label>
-            <ion-label slot="end" class="ion-text-end" *ngIf="newProduct.discount > 0">
-              <p class="mo-text__overline">{{ newProduct.packCount * newProduct.price }}смн</p>
-              {{ newProduct.total }}смн
-            </ion-label> -->
+            <ion-input [min]="0" (input)="recountProductTotal()" type="number"
+              [(ngModel)]="newProduct.total"></ion-input>
           </ion-item>
         </ion-list>
         <div class="mo-data__options" *ngIf="searchResult.length > 0">
-          <div
-            (click)="selectedProd = prod.name; newProduct.title = prod.name; newProduct.id = prod.id; searchResult = []; getTotalPrice(); getTotalBalance()"
-            class="mo-do__item" *ngFor="let prod of searchResult">{{prod.name}}</div>
+          <div (click)="setProd(prod)" class="mo-do__item" *ngFor="let prod of searchResult">{{prod.name}}</div>
         </div>
       </ion-content>
     </ng-template>
@@ -271,4 +276,5 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+
 </ion-content>

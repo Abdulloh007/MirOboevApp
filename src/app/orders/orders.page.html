@@ -27,7 +27,7 @@
             <ion-icon name="document-text-outline" slot="start"></ion-icon>
             <ion-label>
               <h2>{{ order.link }}</h2>
-              <p>{{ order.sum }}смн</p>
+              <p><b>{{ order.sum }}смн</b> {{userRole.degree <= 3 ? order.manager : ''}}</p>
             </ion-label>
           </ion-item>
         </ion-list>

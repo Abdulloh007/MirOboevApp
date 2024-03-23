@@ -53,7 +53,15 @@ export class CreateComponent implements OnInit {
   selectedProd: string = '';
   activeProduct: string = '';
   activeProductId: number | string = '';
-  previosProduct: string = '';
+  previosProduct: Product | null = {
+    id: '',
+    title: '',
+    price: 0,
+    packCount: 0,
+    discount: 0,
+    total: 0,
+    isMeter: false
+  };
   isModalOpen: boolean = false;
   modalAddonTitle: string = '';
   productBalance: any[] = [];
@@ -118,24 +126,32 @@ export class CreateComponent implements OnInit {
   }
 
   confirm() {
-    let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
-    if (processedProd) {
-      this.order.sum -= processedProd.total;
-      this.order.discountSum -= processedProd.discount;
-      this.countProductTotal();
-      processedProd.price = this.newProduct.price;
-      processedProd.packCount = this.newProduct.packCount;
-      processedProd.total = this.newProduct.total;
-      processedProd.discount = this.newProduct.discount;
-      this.order.sum = this.order.sum + processedProd.total;
-      this.order.discountSum = this.order.discountSum + processedProd.discount;
-    } else {
-      if (this.selectedProd === '') {
-        this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
-        return
+    if (this.modalAction === 'edit') {
+      let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
+      if (processedProd) {
+        this.order.sum -= processedProd.total;
+        this.order.discountSum -= processedProd.discount;
+        this.countProductTotal();
+        processedProd.price = this.newProduct.price;
+        processedProd.packCount = this.newProduct.packCount;
+        processedProd.total = this.newProduct.total;
+        processedProd.discount = this.newProduct.discount;
+        this.order.sum = this.order.sum + processedProd.total;
+        this.order.discountSum = this.order.discountSum + processedProd.discount;
+      } else {
+        if (this.selectedProd === '') {
+          this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
+          return
+        }
+        const prevProd: Product | undefined = this.order.products.find(item => item === this.previosProduct);
+        if (this.modalAction === 'edit' && !processedProd && prevProd) this.removeProduct(prevProd.title)
+        this.countProductTotal();
+        this.order.products.push(this.newProduct);
+        this.order.sum += this.newProduct.total;
+        this.order.discountSum += this.newProduct.discount;
+        this.selectedProd = '';
       }
-      const prevProd: Product | undefined = this.order.products.find(item => item.title === this.previosProduct);
-      if (this.modalAction === 'edit' && !processedProd && prevProd) this.removeProduct(prevProd.title)
+    }else if (this.modalAction === 'add') {
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
@@ -154,6 +170,7 @@ export class CreateComponent implements OnInit {
     };
     this.autoSaveOnLocalStorage();
     this.modal.isOpen = false;
+    this.showMeter = false;
     this.modal.dismiss(null, 'confirm');
   }
 
@@ -173,7 +190,7 @@ export class CreateComponent implements OnInit {
     if (product) {
       this.order.sum -= product.total || 0;
     }
-    this.order.products = this.order.products.filter(item => item.title !== title);
+    this.order.products = this.order.products.filter(item => item !== product);
   }
 
   searchProduct(event: any) {
@@ -194,7 +211,8 @@ export class CreateComponent implements OnInit {
       this.modalButton = 'Изменить';
       this.newProduct = Object.assign({}, product) || this.newProduct;
       this.activeProductId = product?.id || ''
-      this.previosProduct = product?.title || ''
+      this.previosProduct = product || null
+      if(product?.isMeter) this.showMeter = true
       this.getTotalPrice()
       this.getTotalBalance()
 

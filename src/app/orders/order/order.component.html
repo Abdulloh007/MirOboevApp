@@ -20,6 +20,22 @@
               {{ order.date | date: 'dd.MM.yyyy HH:mm' }}
             </ion-label>
           </ion-item>
+          <ion-item *ngIf="userRole.degree <= 3">
+            <ion-label>
+              Менеджер
+            </ion-label>
+            <ion-label>
+              {{ order.manager }}
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="userRole.degree <= 3">
+            <ion-label>
+              Автор
+            </ion-label>
+            <ion-label>
+              {{ order.author }}
+            </ion-label>
+          </ion-item>
           <ion-item >
             <ion-label>
               Клиент
@@ -122,6 +138,9 @@
             <ion-label >Пусто</ion-label>
           </ion-item>
           <ion-item button (click)="printTest(printer)" *ngFor="let printer of printerList">{{ printer.name }}</ion-item>
+          <ion-item lines="none">
+            <ion-checkbox [(ngModel)]="printWithComment" labelPlacement="end">Печать комментария</ion-checkbox>
+          </ion-item>
         </ion-list>
       </ion-content>
     </ng-template>

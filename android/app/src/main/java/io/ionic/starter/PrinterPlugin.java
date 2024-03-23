@@ -57,6 +57,7 @@ public class PrinterPlugin extends Plugin {
     try {
       Socket sock = new Socket(host, Integer.valueOf(9100));
       OutputStream outputStream = sock.getOutputStream();
+//      outputStream.write("<ESC>%–12345X".getBytes());
       outputStream.write(decodedBytes);
       outputStream.close();
       sock.close();

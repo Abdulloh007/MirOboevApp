@@ -3,6 +3,7 @@ import { OrdersService } from '../api/orders.service';
 import { ToastController } from '@ionic/angular';
 import { ToastService } from '../api/toast.service';
 import { LoaderService } from '../api/loader.service';
+import { Role } from '../interfaces/Role';
 
 @Component({
   selector: 'app-orders',
@@ -12,6 +13,11 @@ import { LoaderService } from '../api/loader.service';
 export class OrdersPage implements OnInit {
   orders: any[] = []
   draftOrder: any = {}
+  userRole: Role = {
+    name: '',
+    degree: 99999
+  }
+
   constructor(
     private orderService: OrdersService,
     private toast: ToastService,
@@ -19,6 +25,7 @@ export class OrdersPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (localStorage.getItem('role')) this.userRole = JSON.parse(localStorage.getItem('role') || JSON.stringify(this.userRole))
     this.getDraftOrder()
     this.loaderSvr.showLoader = true
     this.orderService.getOrders().subscribe((res: any) => {

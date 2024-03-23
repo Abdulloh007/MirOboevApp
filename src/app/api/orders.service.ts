@@ -43,7 +43,17 @@ export class OrdersService {
   }
 
   getOrderForm(id: string | number) {
-    return this.http.get(this.hostControlSvr.defineHost() + '/get_order_document/' + id, {
+    return this.http.get(this.hostControlSvr.defineHost() + '/get_order_document/' + id , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
+  getOrderFormWithParams(id: string | number, getWithComment?: boolean) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/get_order_document/' + id, {
+      comment: getWithComment ? 1 : 0 
+    }, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('token')
       }

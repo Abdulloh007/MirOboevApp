@@ -152,6 +152,10 @@ export class CreateComponent implements OnInit {
         this.selectedProd = '';
       }
     }else if (this.modalAction === 'add') {
+      if (this.selectedProd === '') {
+        this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
+        return
+      }
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;

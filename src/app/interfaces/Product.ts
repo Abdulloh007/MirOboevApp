@@ -5,5 +5,6 @@ export interface Product {
     packCount: number;
     discount: number;
     total: number;
-    isMeter: boolean
+    isMeter: boolean;
+    unit?: string;
 }

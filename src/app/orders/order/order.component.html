@@ -64,7 +64,7 @@
             <div class="mo-row__wrap">
               <ion-label class="mo-col">
                 <h2>{{ product.title }}</h2>
-                <p>{{ product.price }}смн x {{ product.packCount }} {{product.unit}} {{product.discount > 0 ? "-" + product.discount + "смн" : ""}}</p>
+                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }}смн {{product.discount > 0 ? "-" + product.discount + "смн" : ""}}</p>
               </ion-label>
               <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
                 {{ product.price * product.packCount }}смн

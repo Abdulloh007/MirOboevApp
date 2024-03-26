@@ -34,11 +34,13 @@
 
       <ion-col size="12">
         <ion-list lines="full">
-          <ion-item class="mo-prod__row" *ngFor="let product of order.products">
+          <ion-item class="mo-front__table__row" *ngFor="let product of order.products">
+            <ion-button class="mo-col" (click)="removeProduct(product)" color="danger" fill="clear" slot="start">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
             <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
               <h2 class="mo-wrap__text">{{ product.title }}</h2>
-              <p>{{ product.packCount }} x {{ product.price }}смн {{product.discount > 0 ? "-" + product.discount +
-                "смн" : ""}} </p>
+              <p>{{ product.packCount }} x {{ product.price }}смн {{ product.discount > 0 ? "-" + product.discount + "смн" : ""}} </p>
             </ion-label>
             <ion-label class="mo-col ion-text-end" *ngIf="product.discount === 0">
               {{ product.total }}смн
@@ -47,14 +49,9 @@
               <p class="mo-text__overline">{{ product.packCount * product.price }}смн</p>
               {{ product.total }}смн
             </ion-label>
-            <ion-buttons class="mo-col">
-              <ion-button (click)="removeProduct(product.title)" color="danger" fill="clear" slot="end">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-              <ion-button (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
-                <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-              </ion-button>
-            </ion-buttons>
+            <ion-button (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
+              <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>
           </ion-item>
 
           <ion-item>

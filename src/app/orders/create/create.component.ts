@@ -126,8 +126,12 @@ export class CreateComponent implements OnInit {
   }
 
   confirm() {
+    if (this.newProduct.title === '') {
+      this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
+      return
+    }
     if (this.modalAction === 'edit') {
-      let processedProd: Product | undefined = this.order.products.find(item => item.title === this.newProduct.title);
+      let processedProd: Product | undefined = this.order.products.find(item => item === this.newProduct);
       if (processedProd) {
         this.order.sum -= processedProd.total;
         this.order.discountSum -= processedProd.discount;
@@ -139,12 +143,8 @@ export class CreateComponent implements OnInit {
         this.order.sum = this.order.sum + processedProd.total;
         this.order.discountSum = this.order.discountSum + processedProd.discount;
       } else {
-        if (this.selectedProd === '') {
-          this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
-          return
-        }
         const prevProd: Product | undefined = this.order.products.find(item => item === this.previosProduct);
-        if (this.modalAction === 'edit' && !processedProd && prevProd) this.removeProduct(prevProd.title)
+        if (this.modalAction === 'edit' && !processedProd && prevProd) this.removeProduct(prevProd)
         this.countProductTotal();
         this.order.products.push(this.newProduct);
         this.order.sum += this.newProduct.total;
@@ -152,10 +152,6 @@ export class CreateComponent implements OnInit {
         this.selectedProd = '';
       }
     }else if (this.modalAction === 'add') {
-      if (this.selectedProd === '') {
-        this.toast.presentToast('Вы не выбрали товар! Введите наменклатуру и выберите из списка.')
-        return
-      }
       this.countProductTotal();
       this.order.products.push(this.newProduct);
       this.order.sum += this.newProduct.total;
@@ -182,15 +178,15 @@ export class CreateComponent implements OnInit {
     this.selectedProd = prod.name; 
     this.newProduct.title = prod.name; 
     this.newProduct.id = prod.id; 
-    this.newProduct.isMeter = prod.isMeter; 
+    // this.newProduct.isMeter = prod.isMeter; 
     this.showMeter = prod.isMeter; 
     this.searchResult = []; 
     this.getTotalPrice(); 
     this.getTotalBalance()
   }
 
-  removeProduct(title: string) {
-    const product = this.order.products.find(item => item.title === title);
+  removeProduct(prod: Product) {
+    const product = this.order.products.find(item => item === prod);
     if (product) {
       this.order.sum -= product.total || 0;
     }

@@ -166,7 +166,8 @@ export class CreateComponent implements OnInit {
       discount: 0,
       total: 0,
       db_price: 0,
-      db_balance: 0
+      db_balance: 0,
+      isMeter: false,
     };
     this.autoSaveOnLocalStorage();
     this.modal.isOpen = false;

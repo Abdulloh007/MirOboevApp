@@ -235,7 +235,7 @@ export class CreateComponent implements OnInit {
 
   recountProductTotal() {
     this.newProduct.price = (this.newProduct.total + this.newProduct.discount) / this.newProduct.packCount
-    this.newProduct.price = this.newProduct.price.toFixed(2)
+    this.newProduct.price = parseFloat(this.newProduct.price.toFixed(2))
   }
 
   countTotalDiscount() {

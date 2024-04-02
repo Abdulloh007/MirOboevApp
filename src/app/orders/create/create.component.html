@@ -49,7 +49,7 @@
               <p class="mo-text__overline">{{ product.packCount * product.price }}смн</p>
               {{ product.total }}смн
             </ion-label>
-            <ion-button (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
+            <ion-button (blur)="closeContext()" (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
               <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
             </ion-button>
           </ion-item>

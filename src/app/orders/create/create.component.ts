@@ -274,7 +274,7 @@ export class CreateComponent implements OnInit {
   }
 
   closeContext() {
-    this.contextMenu.nativeElement.classList.remove('active');
+    setTimeout(() => this.contextMenu.nativeElement.classList.remove('active'), 100)
   }
 
   findOutPrice() {
@@ -302,7 +302,8 @@ export class CreateComponent implements OnInit {
   getTotalPrice() {
     this.productsService.findOutPrice(this.newProduct.id).subscribe((res: any) => {
       this.prices = res
-      this.newProduct.db_price = `${this.prices[0]?.price ? this.prices[0].price : 0} ${this.prices[0]?.priceCurrency ? this.prices[0].priceCurrency : 'TJS'}`
+      const priceToShow = this.prices.find(price => price.default) || this.prices[0]
+      this.newProduct.db_price = `${priceToShow?.price ? priceToShow.price : 0} ${priceToShow?.priceCurrency ? priceToShow.priceCurrency : 'TJS'}`
     })
 
   }
@@ -327,14 +328,23 @@ export class CreateComponent implements OnInit {
   }
 
   setOpenAlert(isOpen: boolean) {
+    if (isOpen === true) {
+      this.isPriceOpen = false;
+    }
     this.isPriceOpen = isOpen;
   }
 
   setClientModal(isOpen: boolean) {
+    if (isOpen === true) {
+      this.showClientModal = false;
+    }
     this.showClientModal = isOpen;
   }
 
   setMasterModal(isOpen: boolean) {
+    if (isOpen === true) {
+      this.showMaterModal = false;
+    }
     this.showMaterModal = isOpen;
   }
 

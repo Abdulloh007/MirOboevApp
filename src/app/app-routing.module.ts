@@ -44,15 +44,23 @@ const routes: Routes = [
   },
   {
     path: 'income',
-    loadChildren: () => import('./income/income.module').then( m => m.IncomePageModule)
+    loadChildren: () => import('./income/income.module').then( m => m.IncomePageModule),
+    canActivate: [AuthGuardService]
   },
   {
     path: 'settings',
-    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule),
+    canActivate: [AuthGuardService]
   },
   {
     path: 'inquirer',
-    loadChildren: () => import('./inquirer/inquirer.module').then( m => m.InquirerPageModule)
+    loadChildren: () => import('./inquirer/inquirer.module').then( m => m.InquirerPageModule),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'permission',
+    loadChildren: () => import('./permission/permission.module').then( m => m.PermissionPageModule),
+    canActivate: [AuthGuardService]
   },
 ];
 

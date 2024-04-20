@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Role } from '../interfaces/Role';
+import { CheckPermissionService } from './check-permission.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService {
 
-  constructor() { }
+  constructor(
+    private checkPermissionSrv: CheckPermissionService
+  ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -17,8 +20,11 @@ export class AuthGuardService {
     return this.isAuthed();
   }
 
-  isAuthed() : boolean {
-    if (localStorage.getItem('token')) return true
+  isAuthed(): boolean {
+    if (localStorage.getItem('token')) {
+      this.checkPermissionSrv.checkPermission()
+      return true
+    }
     else return false
   }
 

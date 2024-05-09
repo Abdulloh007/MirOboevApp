@@ -8,6 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { LoaderService } from 'src/app/api/loader.service';
 import { Role } from 'src/app/interfaces/Role';
 import { Printer as PrinterInterface } from 'src/app/interfaces/Printer';
+import { CurrencyService } from 'src/app/api/currency.service';
 
 @Component({
   selector: 'app-order',
@@ -25,12 +26,14 @@ export class OrderComponent implements OnInit {
   printerList: PrinterInterface[] = []
   showPrinterList: boolean = false
   printWithComment: boolean = false
+  currencies: any[] = [];
 
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
     private toast: ToastService,
-    private loaderSvr: LoaderService
+    private loaderSvr: LoaderService,
+    private currencySrv: CurrencyService
   ) { }
 
   ngOnInit() {
@@ -43,6 +46,10 @@ export class OrderComponent implements OnInit {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
           this.loaderSvr.showLoader = false
+          this.currencySrv.getCurencies().subscribe((res: any) => {
+            this.currencies = res
+            this.order.currency = res.find((item: any) => item.id === this.order.currency)
+          })
         }, (err: any) => {
           this.toast.presentToast('Не удалось загрузить данные заказа', 'warning')
           this.loaderSvr.showLoader = false

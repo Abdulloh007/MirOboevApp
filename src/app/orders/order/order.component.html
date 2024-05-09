@@ -64,14 +64,14 @@
             <div class="mo-row__wrap">
               <ion-label class="mo-col">
                 <h2>{{ product.title }}</h2>
-                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }}смн {{product.discount > 0 ? "-" + product.discount + "смн" : ""}}</p>
+                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }} {{order.currency?.name}} {{product.discount > 0 ? "-" + product.discount + " {{order.currency?.name}}" : ""}}</p>
               </ion-label>
               <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
-                {{ product.price * product.packCount }}смн
+                {{ product.price * product.packCount }} {{order.currency?.name}}
               </ion-label>
               <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount > 0">
-                <p class="mo-text__overline">{{ product.price * product.packCount }}смн</p>
-                {{ product.total }}смн
+                <p class="mo-text__overline">{{ product.price * product.packCount }} {{order.currency?.name}}</p>
+                {{ product.total }} {{order.currency?.name}}
               </ion-label>
             </div>
           </ion-item>
@@ -80,7 +80,7 @@
               <h2>Итого</h2>
             </ion-label>
             <ion-label slot="end" class="ion-text-end">
-              {{ order.sum }}смн
+              {{ order.sum }} {{order.currency?.name}}
             </ion-label>
           </ion-item>
         </ion-list>

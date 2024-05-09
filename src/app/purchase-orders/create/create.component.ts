@@ -1,27 +1,24 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonModal, ToastController } from '@ionic/angular';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { CameraService } from 'src/app/api/camera.service';
+import { Capacitor } from '@capacitor/core';
+import { IonModal } from '@ionic/angular';
 import { ClientService } from 'src/app/api/client.service';
+import { CurrencyService } from 'src/app/api/currency.service';
 import { LoaderService } from 'src/app/api/loader.service';
 import { MasterService } from 'src/app/api/master.service';
-import { OrdersService } from 'src/app/api/orders.service';
 import { ProductsService } from 'src/app/api/products.service';
+import { PurchaseOrdersService } from 'src/app/api/purchase-orders.service';
 import { ToastService } from 'src/app/api/toast.service';
 import { Order } from 'src/app/interfaces/Order';
 import { Product } from 'src/app/interfaces/Product';
-import { Capacitor } from '@capacitor/core';
-import { CurrencyService } from 'src/app/api/currency.service';
-
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
 })
-
-export class CreateComponent implements OnInit {
+export class CreateComponent  implements OnInit {
   @ViewChild(IonModal) modal !: IonModal;
   @ViewChild('contextmenu') contextMenu !: ElementRef;
   modalAction: string = 'add';
@@ -36,10 +33,7 @@ export class CreateComponent implements OnInit {
     products: [],
     sum: 0,
     discountSum: 0,
-    currency: {
-      id: '972',
-      name: ""
-    }
+    currency: ""
   };
 
   newProduct: any | Product = {
@@ -87,8 +81,9 @@ export class CreateComponent implements OnInit {
 
   isSupported = false;
   barcodes: Barcode[] = [];
+
   constructor(
-    private orderService: OrdersService,
+    private orderService: PurchaseOrdersService,
     private productsService: ProductsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -108,7 +103,8 @@ export class CreateComponent implements OnInit {
 
     this.route.queryParams.subscribe((params: any) => {
       if (params.id !== undefined && (params.id === 0 || params.id === '0')) {
-        this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
+        this.order = JSON.parse(localStorage.getItem('purchaseOrderDraft') || '{}');
+        
       } else if (params.id !== undefined) {
         this.orderService.getOrder(params.id).subscribe((res: any) => {
           this.order = res;
@@ -264,7 +260,7 @@ export class CreateComponent implements OnInit {
     this.loaderSvr.showLoader = true
     this.toast.presentToast('Сохранение заказа...');
     this.orderService.createOrder(this.order).subscribe((res: any) => {
-      this.router.navigate(['/orders']).then(() => {
+      this.router.navigate(['/purchase-orders']).then(() => {
         window.location.reload();
       });
       localStorage.removeItem('orderDraft');
@@ -372,7 +368,7 @@ export class CreateComponent implements OnInit {
 
   searchClient(event: any) {
     if (event.target.value.length >= 3) {
-      this.clientSvr.searchClient(event.target.value).subscribe((res: any) => {
+      this.clientSvr.searchProvider(event.target.value).subscribe((res: any) => {
         this.clientSearchResult = res;
       }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
     } else {

@@ -20,88 +20,6 @@
               {{ order.date | date: 'dd.MM.yyyy HH:mm' }}
             </ion-label>
           </ion-item>
-          
-          <ion-item >
-            <ion-label>
-              Статус
-            </ion-label>
-            <ion-label>
-              {{ order.status }}
-            </ion-label>
-          </ion-item>
-          <ion-item >
-            <ion-label>
-              Склад <br> отправитель
-            </ion-label>
-            <ion-label>
-              {{ order.storageOut }}
-            </ion-label>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-label>
-              Склад <br> получатель
-            </ion-label>
-            <ion-label>
-              {{ order.storageIn }}
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-
-      <ion-col size="12">
-        <h4 class="">Товары</h4>
-      </ion-col>
-      <ion-col size="12">
-        <ion-list>
-          <ion-item class="mo-prod__row" *ngFor="let product of order.products">
-            <div class="mo-row__wrap">
-              <ion-label class="mo-col">
-                <h2>{{ product.title }}</h2>
-                <p>{{ product.packCount }} {{ product.unit }}</p>
-              </ion-label>
-              <!-- <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
-                {{ product.price * product.packCount }}смн
-              </ion-label>
-              <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount > 0">
-                <p class="mo-text__overline">{{ product.price * product.packCount }}смн</p>
-                {{ product.total }}смн
-              </ion-label> -->
-            </div>
-          </ion-item>
-          <!-- <ion-item lines="none">
-            <ion-label>
-              <h2>Итого</h2>
-            </ion-label>
-            <ion-label slot="end" class="ion-text-end">
-              {{ order.sum }}смн
-            </ion-label>
-          </ion-item> -->
-        </ion-list>
-      </ion-col>
-      <ion-col size="12">
-        <h4 class="">Комментарий</h4>
-      </ion-col>
-      <ion-col size="12">
-        <ion-list>
-          <ion-item>
-            <ion-label>
-              {{ order.comment }}
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
-        <ion-button color="success" style="width: 47%;" routerLink="/move-orders/edit" [queryParams]="{id: order.id}">
-          <ion-icon slot="start" name="create-outline"></ion-icon>
-          Изменить
-        </ion-button> 
-        <ion-button (click)="setShowPrinter(true)" style="width: 47%;" color="danger" >
-          <ion-icon slot="start" name="print-outline"></ion-icon>
-          Печать IP
-        </ion-button>
-      </ion-col>
-      <ion-col size="12">
-        <ion-list>
           <ion-item *ngIf="userRole.degree <= 3">
             <ion-label>
               Менеджер
@@ -118,12 +36,93 @@
               {{ order.author }}
             </ion-label>
           </ion-item>
+          <ion-item >
+            <ion-label>
+              Клиент
+            </ion-label>
+            <ion-label>
+              {{ order.client?.name }}
+            </ion-label>
+          </ion-item>
+          <!-- <ion-item >
+            <ion-label>
+              Валюта
+            </ion-label>
+            <ion-label>
+              {{ order.currency?.name }}
+            </ion-label>
+          </ion-item> -->
         </ion-list>
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Товары</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item class="mo-prod__row" *ngFor="let product of order.products">
+            <div class="mo-row__wrap">
+              <ion-label class="mo-col">
+                <h2>{{ product.title }}</h2>
+                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }} {{order.currency?.name}} {{product.discount > 0 ? "-" + product.discount + " {{order.currency?.name}}" : ""}}</p>
+              </ion-label>
+              <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
+                {{ product.price * product.packCount }} {{order.currency?.name}}
+              </ion-label>
+              <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount > 0">
+                <p class="mo-text__overline">{{ product.price * product.packCount }} {{order.currency?.name}}</p>
+                {{ product.total }}  {{order.currency?.name}}
+              </ion-label>
+            </div>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Итого</h2>
+            </ion-label>
+            <ion-label slot="end" class="ion-text-end">
+              {{ order.sum }}  {{order.currency?.name}}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <h4 class="">Комментарий</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              {{ order.comment }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
+        <ion-button color="success" style="width: 47%;" routerLink="/purchase-orders/edit" [queryParams]="{id: order.id}">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Изменить
+        </ion-button>
+        <!-- <ion-button style="width: 47%;" color="dark" (click)="printOrder()">
+          <ion-icon slot="start" name="print-outline"></ion-icon>
+          Печать
+        </ion-button> -->
+      </ion-col>
+      <!-- <ion-col size="12"  style="display: flex;" class="ion-justify-content-between">
+        <ion-button *ngIf="userRole.degree <= 3" color="warning" routerLink="/income/create" style="width: 47%;" [queryParams]="{base: order.id}">
+          <ion-icon slot="start" name="cash-outline"></ion-icon>
+          ввод оплаты
+        </ion-button>
+        <ion-button (click)="setShowPrinter(true)" style="width: 47%;" color="danger" >
+          <ion-icon slot="start" name="print-outline"></ion-icon>
+          Печать IP
+        </ion-button>
+      </ion-col> -->
+      <ion-col>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-modal [isOpen]="showPrinterList">
+  <!-- <ion-modal [isOpen]="showPrinterList">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -145,6 +144,6 @@
         </ion-list>
       </ion-content>
     </ng-template>
-  </ion-modal>
+  </ion-modal> -->
 </ion-content>
-<pdf-viewer id="pdf" #pdf class="for-print" [src]="pdfUrl" [render-text]="true"></pdf-viewer>
+<!-- <pdf-viewer id="pdf" #pdf class="for-print" [src]="pdfUrl" [render-text]="true"></pdf-viewer> -->

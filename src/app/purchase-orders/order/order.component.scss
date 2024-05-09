@@ -1,26 +1,3 @@
-.for-print {
-    position: fixed;
-    top: 0;
-    left: -30px;
-    opacity: 0;
-    z-index: -1;
-    pointer-events: none;
-    width: 793px;
-    height: 1122px;
-}
-
-@media print {
-    *:not(.for-print) {
-        display: none;
-    }
-
-    .for-print {
-        display: block;
-        opacity: 1;
-        z-index: auto;
-    }
-}
-
 .mo-prod__row{
     .mo-row__wrap {
         width: 100%;

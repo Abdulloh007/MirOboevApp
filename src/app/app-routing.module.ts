@@ -62,6 +62,10 @@ const routes: Routes = [
     loadChildren: () => import('./permission/permission.module').then( m => m.PermissionPageModule),
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'purchase-orders',
+    loadChildren: () => import('./purchase-orders/purchase-orders.module').then( m => m.PurchaseOrdersPageModule)
+  },
 ];
 
 @NgModule({

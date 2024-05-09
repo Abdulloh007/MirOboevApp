@@ -69,4 +69,26 @@ public class PrinterPlugin extends Plugin {
     }
   }
 
+  public String generatePCL3GUI() {
+    StringBuilder pclCode = new StringBuilder();
+
+    pclCode.append("\u001B%-12345X@PJL JOB\r\n");
+    pclCode.append("@PJL ENTER LANGUAGE=PCL3GUI\r\n");
+
+    pclCode.append("\u001B*s0M"); // Set color mode to monochrome
+    pclCode.append("\u001B*t300R"); // Set resolution to 300 dpi
+    pclCode.append("\u001B*r0F"); // Set orientation to portrait
+
+
+    pclCode.append("\u001B(8U"); // Select font: Courier New
+    pclCode.append("\u001BE"); // Start of the print job
+    pclCode.append("\u001B&a100H"); // Set position (x=100, y=100)
+    pclCode.append("Hello, world!\r\n"); // Print text
+
+    pclCode.append("\u001B%-12345X@PJL EOJ\r\n");
+
+    return pclCode.toString();
+  }
+
+
 }

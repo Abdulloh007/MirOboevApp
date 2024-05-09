@@ -1,3 +1,231 @@
-<p>
-  create works!
-</p>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{order.link}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <h4 class="">Заказ</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label slot="start">Склад Отправитель</ion-label>
+            <ion-button fill="clear" color="success" (click)="setStorageOutModal(true)">{{ order.storageOut ? order.storageOut
+              : 'Выберите склад' }}</ion-button>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label slot="start">Склад Получатель</ion-label>
+            <ion-button fill="clear" color="success" (click)="setStorageInModal(true)">{{ order.storageIn ? order.storageIn
+              : 'Выберите склад' }}</ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Товары</h4>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item class="mo-front__table__row" *ngFor="let product of order.products">
+            <ion-button class="mo-col" (click)="removeProduct(product)" color="danger" fill="clear" slot="start">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+            <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
+              <h2 class="mo-wrap__text">{{ product.title }}</h2>
+              <!-- <p>{{ product.packCount }}</p> -->
+            </ion-label>
+            <ion-label class="mo-col ion-text-end">
+              {{ product.packCount }}смн
+            </ion-label>
+            <ion-button (blur)="closeContext()" (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
+              <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-button color="success" (click)="prepareAction('add'); modal.isOpen = true" slot="center"
+                fill="clear">
+                Добавить товар
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-button>
+            </ion-label>
+            <ion-button color="success" slot="end" fill="clear" (click)="scan()">
+              <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Итого</h2>
+            </ion-label>
+            <ion-label slot="end" class="ion-text-end">
+              {{ totalProdBalance }}смн
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <h4 class="">Комментарий</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item lines="none">
+            <ion-textarea [(ngModel)]="order.comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="8" offset="2">
+        <ion-button color="success" (click)="saveOrder()" [disabled]="order.products.length === 0" expand="block">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Записать и закрыть
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="mo-contextmenu" #contextmenu>
+    <ion-button color="success" (click)="findOutBalance()" fill="clear">Узнать остаток</ion-button>
+  </div>
+
+  <ion-modal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>{{modalTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Далее</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label position="floating">Наименование</ion-label>
+            <ion-input [clearOnEdit]="true" (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
+              helperText="Введите больше трех символов для подсказки"></ion-input>
+          </ion-item>
+          <!-- <ion-item *ngIf="showMeter">
+            <ion-label class="mo-meter-switch">
+              <span>Рулон</span>
+              <ion-toggle [(ngModel)]="newProduct.isMeter"></ion-toggle>
+              <span>Метр</span>
+            </ion-label>
+          </ion-item> -->
+          <ion-item>
+            <ion-label position="floating">Количество</ion-label>
+            <ion-input [min]="0" [clearOnEdit]="true" type="number"
+              [(ngModel)]="newProduct.packCount"></ion-input>
+            <ion-button color="dark" (click)="toggleInfo($event)" fill="clear" class="mo-prompt show">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <p> <span class="my">{{productMyBalance?.balance}}</span> / <span class="all">{{ newProduct.db_balance
+                  }}</span> </p>
+            </ion-button>
+          </ion-item>
+          <!-- <ion-item lines="none">
+            <ion-label position="floating">Итого</ion-label>
+            <ion-input [min]="0" (input)="recountProductTotal()" type="number"
+              [(ngModel)]="newProduct.total"></ion-input>
+          </ion-item> -->
+        </ion-list>
+        <div class="mo-data__options" *ngIf="searchResult.length > 0">
+          <div (click)="setProd(prod)" class="mo-do__item" *ngFor="let prod of searchResult">{{prod.name}}</div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="showStorageInModal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setStorageInModal(false); storageSearchResult = []">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>Склад Получатель</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setStorageInModal(false)" [strong]="true">Далее</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar (ionInput)="searchStorage($event)"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item (click)="setStorage(storage, 'IN')" button *ngFor="let storage of storageSearchResult">
+            <ion-label>{{ storage }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-modal [isOpen]="showStorageOutModal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setStorageOutModal(false); storageSearchResult = []">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>Склад Отправитель</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setStorageOutModal(false)" [strong]="true">Далее</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar (ionInput)="searchStorage($event)"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item (click)="setStorage(storage, 'OUT')" button *ngFor="let storage of storageSearchResult">
+            <ion-label>{{ storage }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{modalAddonTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false); productBalance = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item class="mo-row mo-prod__row balance">
+            <span class="mo-col">Склад</span>
+            <span class="mo-col">Серия</span>
+            <span class="mo-col">Остаток</span>
+          </ion-item>
+          <ion-item class="mo-row mo-prod__row balance" *ngFor="let item of productBalance">
+            <span class="mo-col">{{ item.storage }}</span>
+            <span class="mo-col">{{ item.lot }}</span>
+            <span class="mo-col">{{ item.balance }}</span>
+          </ion-item>
+          <ion-item lines="none" class="mo-row mo-prod__row balance">
+            <span class="mo-col">Итого</span>
+            <span class="mo-col"></span>
+            <span class="mo-col">{{ getLocalBalnace() }}</span>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

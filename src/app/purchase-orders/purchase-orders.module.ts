@@ -4,11 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MoveOrdersPageRoutingModule } from './move-orders-routing.module';
+import { PurchaseOrdersPageRoutingModule } from './purchase-orders-routing.module';
 
-import { MoveOrdersPage } from './move-orders.page';
+import { PurchaseOrdersPage } from './purchase-orders.page';
 import { OrderComponent } from './order/order.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { CreateComponent } from './create/create.component';
 
 @NgModule({
@@ -16,9 +15,8 @@ import { CreateComponent } from './create/create.component';
     CommonModule,
     FormsModule,
     IonicModule,
-    MoveOrdersPageRoutingModule,
-    PdfViewerModule
+    PurchaseOrdersPageRoutingModule
   ],
-  declarations: [MoveOrdersPage, OrderComponent, CreateComponent]
+  declarations: [PurchaseOrdersPage, OrderComponent, CreateComponent]
 })
-export class MoveOrdersPageModule {}
+export class PurchaseOrdersPageModule {}

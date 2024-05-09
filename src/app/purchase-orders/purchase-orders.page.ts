@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Role } from '../interfaces/Role';
+import { PurchaseOrdersService } from '../api/purchase-orders.service';
 import { ToastService } from '../api/toast.service';
 import { LoaderService } from '../api/loader.service';
-import { MovementOrdersService } from '../api/movementOrders.service';
 
 @Component({
-  selector: 'app-move-orders',
-  templateUrl: './move-orders.page.html',
-  styleUrls: ['./move-orders.page.scss'],
+  selector: 'app-purchase-orders',
+  templateUrl: './purchase-orders.page.html',
+  styleUrls: ['./purchase-orders.page.scss'],
 })
-export class MoveOrdersPage implements OnInit {
+export class PurchaseOrdersPage implements OnInit {
   orders: any[] = []
   draftOrder: any = {}
   userRole: Role = {
@@ -18,7 +18,7 @@ export class MoveOrdersPage implements OnInit {
   }
 
   constructor(
-    private orderService: MovementOrdersService,
+    private orderService: PurchaseOrdersService,
     private toast: ToastService,
     private loaderSvr: LoaderService
   ) { }
@@ -34,13 +34,12 @@ export class MoveOrdersPage implements OnInit {
         this.toast.presentToast('Не удалось загрузить список заказов!', 'danger')
         this.loaderSvr.showLoader = false
       })
+  }
+
   
-  }
-
   getDraftOrder() {
-    this.draftOrder = localStorage.getItem('movementOrderDraft')
+    this.draftOrder = localStorage.getItem('purchaseOrderDraft')
   }
-
 
   handleRefresh(e: any) {
     this.orderService.getOrders().subscribe((res: any) => {

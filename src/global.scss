@@ -29,3 +29,28 @@
 .mo-text__overline {
     text-decoration: line-through;
 }
+
+// Tab-bar styles
+.mo-tab-nav {
+    justify-content: space-evenly;
+}
+
+.mo-btn-wrap {
+    display: block;
+    text-align: center;
+
+    & > * {
+        display: block;
+        margin: 0 auto;
+    }
+
+    ion-icon {
+        margin-bottom: 5px;
+    }
+
+    span {
+        text-transform: none;
+        font-weight: normal;
+        font-size: 11px;
+    }
+}

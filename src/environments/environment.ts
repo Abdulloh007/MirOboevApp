@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   api: '/erpdev/hs/api',
-  version: 'v.0.2.6'
+  chatApi: '/erpdev/hs/msgr',
+  version: 'v.0.2.7'
 };
 
 /*

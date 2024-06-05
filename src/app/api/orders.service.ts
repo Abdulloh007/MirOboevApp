@@ -41,6 +41,15 @@ export class OrdersService {
       }
     })
   }
+  
+  searchOrder(body: any) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/s-client-order', body, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
 
   getOrderForm(id: string | number) {
     return this.http.get(this.hostControlSvr.defineHost() + '/get_order_document/' + id , {

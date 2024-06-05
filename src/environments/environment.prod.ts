@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
   api: '/hs/api',
-  version: 'v.0.2.6'
+  chatApi: '/hs/msgr',
+  version: 'v.0.2.7'
 };

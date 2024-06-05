@@ -71,6 +71,19 @@ export class CheckPermissionService {
     })
   }
 
+  sendLocation(coords: any) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/chpm', {
+      lat: coords?.latitude,
+      long: coords?.longitude
+    }, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
   exitAccount() {
     localStorage.removeItem('activeServer')
     localStorage.removeItem('token')

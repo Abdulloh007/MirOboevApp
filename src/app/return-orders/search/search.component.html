@@ -1,0 +1,206 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-item>
+      <ion-input slot="start" [(ngModel)]="filters.order.id" placeholder="Введите номер заказа"></ion-input>
+      <ion-button color="success" slot="end" fill="clear" (click)="scan()">
+        <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filters.product.isActive">Номенклатура</ion-checkbox>
+
+            <ion-input placeholder="Наименование" [disabled]="!filters.product.isActive" [clearOnEdit]="true"
+              (input)="searchProduct($event)" type="text" [(ngModel)]="filters.product.name"></ion-input>
+
+              
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filters.quantity.isActive">Количество</ion-checkbox>
+            <ion-input placeholder="Количество" [disabled]="!filters.quantity.isActive" [clearOnEdit]="true"
+              type="text" [(ngModel)]="filters.quantity.value"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end" [(ngModel)]="filters.sum.isActive">Сумма
+              Заказа</ion-checkbox>
+            <ion-input placeholder="Сумма" [disabled]="!filters.sum.isActive" [clearOnEdit]="true"
+              type="text" [(ngModel)]="filters.sum.value"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filters.subdivision.isActive">Подразделение</ion-checkbox>
+              <ion-input placeholder="Подразделение" [disabled]="!filters.subdivision.isActive" [clearOnEdit]="true"
+              (input)="searchSubdivision($event)" type="text" [(ngModel)]="filters.subdivision.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filters.manager.isActive">Менеджер</ion-checkbox>
+              <ion-input placeholder="Менеджер" [disabled]="!filters.manager.isActive" [clearOnEdit]="true"
+              (input)="searchManager($event)" type="text" [(ngModel)]="filters.manager.name"></ion-input>
+          </ion-item>
+          <ion-button (click)="search()" color="success" expand="block">Поиск</ion-button>
+          
+        </ion-list>
+        <div class="mo-data__options" *ngIf="prodSearchResult.length > 0">
+          <div (click)="setProd(prod)" class="mo-do__item" *ngFor="let prod of prodSearchResult">{{prod.name}}</div>
+        </div>
+        <div class="mo-data__options f2" *ngIf="subdivisionSearchResult.length > 0">
+          <div (click)="setSubdivion(subdiv)" class="mo-do__item" *ngFor="let subdiv of subdivisionSearchResult">{{subdiv.name}}</div>
+        </div>
+        <div class="mo-data__options f3" *ngIf="managerSearchResult.length > 0">
+          <div (click)="setManager(manager)" class="mo-do__item" *ngFor="let manager of managerSearchResult">{{manager.name}}</div>
+        </div>
+        
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Результаты поиска</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item class="mo-prod__row" *ngFor="let item of searchResult" (click)="setShowOrderModal(item)">
+            <ion-icon name="document-text-outline" slot="start"></ion-icon>
+            <ion-label>
+              <h2>{{ item.link }}</h2>
+              <p><b>{{ item.sum }} {{ item.currency?.name }}</b> {{userRole.degree <= 3 ? item.manager : '' }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-modal [isOpen]="showOrderModal" (didDismiss)="cancel()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>{{ selectedOrder?.link }}</ion-title>
+          <!-- <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Возврат</ion-button>
+          </ion-buttons> -->
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-list>
+                <ion-item>
+                  <ion-label>
+                    Дата
+                  </ion-label>
+                  <ion-label>
+                    {{ selectedOrder.date | date: 'dd.MM.yyyy HH:mm' }}
+                  </ion-label>
+                </ion-item>
+                <ion-item *ngIf="userRole.degree <= 3">
+                  <ion-label>
+                    Менеджер
+                  </ion-label>
+                  <ion-label>
+                    {{ selectedOrder.manager }}
+                  </ion-label>
+                </ion-item>
+                <ion-item *ngIf="userRole.degree <= 3">
+                  <ion-label>
+                    Автор
+                  </ion-label>
+                  <ion-label>
+                    {{ selectedOrder.author }}
+                  </ion-label>
+                </ion-item>
+                <ion-item >
+                  <ion-label>
+                    Клиент
+                  </ion-label>
+                  <ion-label>
+                    {{ selectedOrder.client?.name }}
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label>
+                    Мастер
+                  </ion-label>
+                  <ion-label>
+                    {{ selectedOrder.master?.name }}
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+      
+            <ion-col size="12">
+              <h4 class="">Товары</h4>
+            </ion-col>
+            <ion-col size="12">
+              <ion-list>
+                <ion-item class="mo-prod__row" *ngFor="let product of selectedOrder.products; let idx = index">
+                  <!-- <ion-text>{{(idx + 1).toString().padStart(2, '0')}}</ion-text>             -->
+                  <div class="mo-row__wrap">
+                    <ion-label class="mo-col">
+                      <h2>{{ product.title }}</h2>
+                      <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }} {{selectedOrder.currency?.name}} {{product.discount > 0 ? "-" + product.discount + selectedOrder.currency?.name : ""}}</p>
+                    </ion-label>
+                    <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
+                      {{ product.price * product.packCount }} {{selectedOrder.currency?.name}}
+                    </ion-label>
+                    <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount > 0">
+                      <p class="mo-text__overline">{{ product.price * product.packCount }} {{selectedOrder.currency?.name}}</p>
+                      {{ product.total }} {{selectedOrder.currency?.name}}
+                    </ion-label>
+                  </div>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label>
+                    <h2>Итого</h2>
+                  </ion-label>
+                  <ion-label slot="end" class="ion-text-end">
+                    {{ selectedOrder.sum }} {{selectedOrder.currency?.name}}
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+            <ion-col size="12">
+              <h4 class="">Комментарий</h4>
+            </ion-col>
+            <ion-col size="12">
+              <ion-list>
+                <ion-item>
+                  <ion-label>
+                    {{ selectedOrder.comment }}
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+            <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
+              <ion-button (click)="confirm()" color="success" style="width: 47%;">
+                <ion-icon slot="start" name="create-outline"></ion-icon>
+                Возврат
+              </ion-button>
+              <!-- <ion-button style="width: 47%;" color="dark" (click)="printOrder()">
+                <ion-icon slot="start" name="print-outline"></ion-icon>
+                Печать
+              </ion-button> -->
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

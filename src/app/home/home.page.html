@@ -43,7 +43,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="6">
-        <ion-button color="success" *ngIf="userRole.degree <= 3" disabled expand="block" routerLink="/return-orders">
+        <ion-button color="success" *ngIf="userRole.degree <= 3" expand="block" routerLink="/return-orders">
           <div class="mo-btn__content">
             <ion-icon slot="start" size="large" name="arrow-undo"></ion-icon>
             Возврат
@@ -114,3 +114,5 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+<app-tabbbar></app-tabbbar>

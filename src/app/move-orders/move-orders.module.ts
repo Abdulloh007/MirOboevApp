@@ -10,6 +10,7 @@ import { MoveOrdersPage } from './move-orders.page';
 import { OrderComponent } from './order/order.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { CreateComponent } from './create/create.component';
+import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { CreateComponent } from './create/create.component';
     FormsModule,
     IonicModule,
     MoveOrdersPageRoutingModule,
-    PdfViewerModule
+    PdfViewerModule,
+    TabbbarPageModule
   ],
   declarations: [MoveOrdersPage, OrderComponent, CreateComponent]
 })

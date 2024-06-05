@@ -1,3 +1,251 @@
-<p>
-  create works!
-</p>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="#"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{order.link}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <h4 class="">Заказ</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label slot="start">Клиент</ion-label>
+            <ion-button disabled fill="clear" color="success" (click)="setClientModal(true)">{{ order.client ? order.client.name
+              : 'Розничный покупатель' }}</ion-button>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-select label="Валюта" (ionChange)="currecyChage()" [(ngModel)]="order.currency" placeholder="Валюта">
+              <ion-select-option *ngFor="let cr of currencies" [value]="cr?.id">{{cr?.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Товары</h4>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item class="mo-front__table__row" *ngFor="let product of order.products">
+            <ion-button class="mo-col" (click)="removeProduct(product)" color="danger" fill="clear" slot="start">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+            <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
+              <h2 class="mo-wrap__text">{{ product.title }}</h2>
+              <p>{{ product.packCount }} x {{ product.price }} {{currentCurrency?.name}} {{ product.discount > 0 ? "-" + product.discount + " {{currentCurrency?.name}}" : ""}} </p>
+            </ion-label>
+            <ion-label class="mo-col ion-text-end" *ngIf="product.discount === 0">
+              {{ product.total }} {{currentCurrency?.name}}
+            </ion-label>
+            <ion-label class="mo-col ion-text-end" *ngIf="product.discount > 0">
+              <p class="mo-text__overline">{{ product.packCount * product.price }} {{currentCurrency?.name}}</p>
+              {{ product.total }} {{currentCurrency?.name}}
+            </ion-label>
+            <ion-button (blur)="closeContext()" (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
+              <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-button color="success" (click)="prepareAction('add'); modal.isOpen = true" slot="center"
+                fill="clear">
+                Добавить товар
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-button>
+            </ion-label>
+            <ion-button color="success" slot="end" fill="clear" (click)="scan()">
+              <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Итого</h2>
+            </ion-label>
+            <ion-label slot="end" class="ion-text-end">
+              {{ order.sum }} {{currentCurrency?.name}}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <h4 class="">Комментарий</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item lines="none">
+            <ion-textarea [(ngModel)]="order.comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="8" offset="2">
+        <ion-button color="success" (click)="saveOrder()" [disabled]="order.products.length === 0" expand="block">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Записать и закрыть
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="mo-contextmenu" #contextmenu>
+    <ion-button color="success" (click)="findOutPrice()" fill="clear">Узнать цену</ion-button>
+    <ion-button color="success" (click)="findOutBalance()" fill="clear">Узнать остаток</ion-button>
+  </div>
+
+  <ion-modal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>{{modalTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Далее</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label position="floating">Наименование</ion-label>
+            <ion-input [clearOnEdit]="true" (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
+              helperText="Введите больше трех символов для подсказки"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="showMeter">
+            <ion-label class="mo-meter-switch">
+              <span>Рулон</span>
+              <ion-toggle [(ngModel)]="newProduct.isMeter"></ion-toggle>
+              <span>Метр</span>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Количество</ion-label>
+            <ion-input [min]="0" (input)="countProductTotal()" [clearOnEdit]="true" type="number"
+              [(ngModel)]="newProduct.packCount"></ion-input>
+            <ion-button color="dark" (click)="toggleInfo($event)" fill="clear" class="mo-prompt show">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <p> <span class="my">{{productMyBalance?.balance}}</span> / <span class="all">{{ newProduct.db_balance
+                  }}</span> </p>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Цена</ion-label>
+            <ion-input [min]="0" (input)="countProductTotal()" type="number" [clearOnEdit]="true"
+              [(ngModel)]="newProduct.price"></ion-input>
+            <ion-button color="success" (click)="toggleInfo($event)" fill="clear" class="mo-prompt">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <p><span>{{ newProduct.db_price }}</span></p>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Скидка (Сумма)</ion-label>
+            <ion-input [min]="0" (input)="countProductTotal()"
+              (ionChange)="this.newProduct.discount === null ? this.newProduct.discount = 0 : ''" type="number"
+              [clearOnEdit]="true" [(ngModel)]="newProduct.discount"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="floating">Итого</ion-label>
+            <ion-input [min]="0" (input)="recountProductTotal()" type="number"
+              [(ngModel)]="newProduct.total"></ion-input>
+          </ion-item>
+        </ion-list>
+        <div class="mo-data__options" *ngIf="searchResult.length > 0">
+          <div (click)="setProd(prod)" class="mo-do__item" *ngFor="let prod of searchResult">{{prod.name}}</div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{modalAddonTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false); productBalance = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item class="mo-row mo-prod__row balance">
+            <span class="mo-col">Склад</span>
+            <span class="mo-col">Серия</span>
+            <span class="mo-col">Остаток</span>
+          </ion-item>
+          <ion-item class="mo-row mo-prod__row balance" *ngFor="let item of productBalance">
+            <span class="mo-col">{{ item.storage }}</span>
+            <span class="mo-col">{{ item.lot }}</span>
+            <span class="mo-col">{{ item.balance }}</span>
+          </ion-item>
+          <ion-item lines="none" class="mo-row mo-prod__row balance">
+            <span class="mo-col">Итого</span>
+            <span class="mo-col"></span>
+            <span class="mo-col">{{ getLocalBalnace() }}</span>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isPriceOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{modalAddonTitle}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenAlert(false); productBalance = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label>Вид цены</ion-label>
+            <ion-label>цена</ion-label>
+          </ion-item>
+          <ion-item *ngFor="let item of prices">
+            <ion-label>{{ item.priceType }}</ion-label>
+            <ion-label>{{ item.price }} {{ item.priceCurrency }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="showClientModal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setClientModal(false); clientSearchResult = []">Отмена</ion-button>
+          </ion-buttons>
+          <ion-title>Клиент</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setClientModal(false)" [strong]="true">Далее</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar (ionInput)="searchClient($event)"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item (click)="setClient(client)" button *ngFor="let client of clientSearchResult">
+            <ion-label>{{ client.name }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

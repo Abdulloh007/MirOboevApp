@@ -22,4 +22,14 @@ export class UserService {
     })
   }
 
+  searchUser(query: string) {
+    return this.http.get(this.hostControlSvr.defineHost() + '/s-users/' + query, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  }
+
 }

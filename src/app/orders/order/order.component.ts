@@ -9,6 +9,7 @@ import { LoaderService } from 'src/app/api/loader.service';
 import { Role } from 'src/app/interfaces/Role';
 import { Printer as PrinterInterface } from 'src/app/interfaces/Printer';
 import { CurrencyService } from 'src/app/api/currency.service';
+import { PrintersService } from 'src/app/api/printers.service';
 
 @Component({
   selector: 'app-order',
@@ -24,6 +25,7 @@ export class OrderComponent implements OnInit {
     degree: 99999
   }
   printerList: PrinterInterface[] = []
+  serverPrinters: any[] = []
   showPrinterList: boolean = false
   printWithComment: boolean = false
   currencies: any[] = [];
@@ -33,7 +35,8 @@ export class OrderComponent implements OnInit {
     private route: ActivatedRoute,
     private toast: ToastService,
     private loaderSvr: LoaderService,
-    private currencySrv: CurrencyService
+    private currencySrv: CurrencyService,
+    private printerSrv: PrintersService
   ) { }
 
   ngOnInit() {
@@ -112,9 +115,30 @@ export class OrderComponent implements OnInit {
     })
   }
 
+  printOnServer(printer: any) {
+    this.loaderSvr.showLoader = true
+    this.printerSrv.PrintOrder({
+      id: this.order.id,
+      printer_id: printer.id,
+      quantity: 1
+    }).subscribe(() => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast("Печать запущена...")
+    }, (err: any) => {
+      this.toast.presentToast('Не удалось загрузить документ', 'warning')
+      this.loaderSvr.showLoader = false
+    }, () => {
+      this.showPrinterList = false
+      this.loaderSvr.showLoader = false
+    })
+  }
+
   setShowPrinter(isOpen: boolean) {
     this.printerList = JSON.parse(localStorage.getItem('printers') || '[]')
+    this.serverPrinters = JSON.parse(localStorage.getItem('serverPrinters') || '[]')
     this.showPrinterList = isOpen
   }
+
+
 
 }

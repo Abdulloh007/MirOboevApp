@@ -1,0 +1,94 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Чат</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item-sliding *ngFor="let chat of chats">
+            <ion-item-options side="start">
+              <ion-item-option color="success" expandable>
+                <ion-icon slot="icon-only" name="archive"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+            <ion-item routerLink="chat" [queryParams]="{id: chat.id}">
+              <ion-avatar slot="start">
+                <img *ngIf="chat.avatar" alt="Silhouette of a person's head"
+                  [src]="'data:image/jpeg;base64,' + chat.avatar" />
+                <img *ngIf="!chat.avatar" alt="Silhouette of a person's head" src="/assets/avatar.svg" />
+
+              </ion-avatar>
+              <ion-label>
+                <h4>{{ chat.companion }}</h4>
+                <p>{{ chat.type }}</p>
+              </ion-label>
+              <ion-badge slot="end" *ngIf="chat.unreaded_messages > 0" color="success">{{ chat.unreaded_messages }}</ion-badge>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option expandable>
+                <ion-icon slot="icon-only" name="volume-mute"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+
+    <ion-fab-button color="success">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="setShowSelection('private')">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="setShowSelection('group')">
+        <ion-icon name="people-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+
+<ion-modal [isOpen]="showSelection" (didDismis)="cancel()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar *ngIf="newChat.type === 'group'">
+        <ion-item>
+          <ion-input [(ngModel)]="newChat.title" placeholder="Введите название группы"></ion-input>
+        </ion-item>
+      </ion-toolbar>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Отмена</ion-button>
+        </ion-buttons>
+        <ion-title>Выберите участников</ion-title>
+        <ion-buttons slot="end">
+          <ion-button [disabled]="newChat.members.length === 0" (click)="confirm()" [strong]="true">Создать</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-item *ngFor="let user of users">
+        <ion-checkbox [value]="user.name" [checked]="isChecked(user.name)" (ionChange)="checkboxChange($event)">{{ user.name }}</ion-checkbox>
+      </ion-item>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<app-tabbbar></app-tabbbar>

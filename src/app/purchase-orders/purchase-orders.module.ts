@@ -9,13 +9,15 @@ import { PurchaseOrdersPageRoutingModule } from './purchase-orders-routing.modul
 import { PurchaseOrdersPage } from './purchase-orders.page';
 import { OrderComponent } from './order/order.component';
 import { CreateComponent } from './create/create.component';
+import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PurchaseOrdersPageRoutingModule
+    PurchaseOrdersPageRoutingModule,
+    TabbbarPageModule
   ],
   declarations: [PurchaseOrdersPage, OrderComponent, CreateComponent]
 })

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "422056816245",
+    "project_id": "mobi-1c",
+    "storage_bucket": "mobi-1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422056816245:android:90b4113f6d5eff117fd23c",
+        "android_client_info": {
+          "package_name": "tj.mo.mobi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAchm918ef7g2Qy_Mtz6uEnMyEySFSuff0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

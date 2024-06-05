@@ -17,4 +17,12 @@ export class HostControlService {
     }
   }
 
+  defineChatHost() {
+    if (Capacitor.isNativePlatform()) {
+      return (localStorage.getItem('activeServer') ? localStorage.getItem('activeServer') : 'http://localhost') + '/hs/msgr'
+    }else {
+      return environment.chatApi
+    }
+  }
+
 }

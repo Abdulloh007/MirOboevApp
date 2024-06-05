@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { InquirerPageRoutingModule } from './inquirer-routing.module';
 
 import { InquirerPage } from './inquirer.page';
+import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    InquirerPageRoutingModule
+    InquirerPageRoutingModule,
+    TabbbarPageModule
   ],
   declarations: [InquirerPage]
 })

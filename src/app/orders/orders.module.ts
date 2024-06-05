@@ -10,6 +10,7 @@ import { OrdersPage } from './orders.page';
 import { OrderComponent } from './order/order.component';
 import { CreateComponent } from './create/create.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     FormsModule,
     IonicModule,
     OrdersPageRoutingModule,
-    PdfViewerModule
+    PdfViewerModule,
+    TabbbarPageModule
   ],
   declarations: [OrdersPage, OrderComponent, CreateComponent]
 })

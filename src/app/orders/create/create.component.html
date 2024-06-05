@@ -39,7 +39,8 @@
 
       <ion-col size="12">
         <ion-list lines="full">
-          <ion-item class="mo-front__table__row" *ngFor="let product of order.products">
+          <ion-item class="mo-front__table__row" *ngFor="let product of order.products; let idx = index">
+            <!-- <ion-text>{{(idx + 1).toString().padStart(2, '0')}}</ion-text>  -->
             <ion-button class="mo-col" (click)="removeProduct(product)" color="danger" fill="clear" slot="start">
               <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
             </ion-button>

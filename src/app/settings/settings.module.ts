@@ -8,13 +8,15 @@ import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
 import { PrintersComponent } from './printers/printers.component';
+import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SettingsPageRoutingModule
+    SettingsPageRoutingModule,
+    TabbbarPageModule
   ],
   declarations: [SettingsPage, PrintersComponent]
 })

@@ -80,38 +80,41 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    const sendingMsg = this.message
-    this.messages.push({
-      id: 0,
-      date: new Date(),
-      status: 'Sending',
-      is_my: true,
-      text: sendingMsg.text,
-      user: this.me?.name,
-      file: sendingMsg.file,
-      file_name: sendingMsg.file_name,
-      file_type: sendingMsg.file_type
-    })
-    this.message = {
-      text: '',
-      file: '',
-      file_name: '',
-      file_type: ''
-    }
-    this.scrollToBottom()
-    this.chatsSvr.createMessage({
-      id: this.chat.id,
-      text: sendingMsg.text,
-      file: sendingMsg.file.split('base64,')[1],
-      file_name: sendingMsg.file_name,
-      file_type: sendingMsg.file_type
-    }).subscribe((res: any) => {
-      let currentMessage = this.messages?.find(item => (item.user == this.me?.name && item.is_my == true && item.text == sendingMsg.text))
-      if (currentMessage) {
-        currentMessage.status = 'Unreaded'
-        currentMessage.id = res.id
+    if(this.message.text !== '' || this.message.file !== '') {
+
+      const sendingMsg = this.message
+      this.messages.push({
+        id: 0,
+        date: new Date(),
+        status: 'Sending',
+        is_my: true,
+        text: sendingMsg.text,
+        user: this.me?.name,
+        file: sendingMsg.file,
+        file_name: sendingMsg.file_name,
+        file_type: sendingMsg.file_type
+      })
+      this.message = {
+        text: '',
+        file: '',
+        file_name: '',
+        file_type: ''
       }
-    })
+      this.scrollToBottom()
+      this.chatsSvr.createMessage({
+        id: this.chat.id,
+        text: sendingMsg.text,
+        file: sendingMsg.file.split('base64,')[1],
+        file_name: sendingMsg.file_name,
+        file_type: sendingMsg.file_type
+      }).subscribe((res: any) => {
+        let currentMessage = this.messages?.find(item => (item.user == this.me?.name && item.is_my == true && item.text == sendingMsg.text))
+        if (currentMessage) {
+          currentMessage.status = 'Unreaded'
+          currentMessage.id = res.id
+        }
+      })
+    }
   }
 
   handleRefresh(e: any) {

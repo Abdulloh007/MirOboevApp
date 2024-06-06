@@ -58,7 +58,7 @@
         <ion-button color="success" fill="clear" slot="start" (click)="selectFile()">
           <ion-icon slot="icon-only" name="document"></ion-icon>
         </ion-button>
-        <ion-button (click)="sendMessage()" [disabled]="message.text === ''" color="success" fill="clear" slot="end"
+        <ion-button (click)="sendMessage()" [disabled]="message.text === '' && message.file === ''" color="success" fill="clear" slot="end"
           aria-label="Show/hide">
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>

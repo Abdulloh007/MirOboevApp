@@ -11,6 +11,7 @@ import { OrderComponent } from './order/order.component';
 import { CreateComponent } from './create/create.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
+import { MonitoringComponent } from './monitoring/monitoring.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { TabbbarPageModule } from '../tabbbar/tabbbar.module';
     PdfViewerModule,
     TabbbarPageModule
   ],
-  declarations: [OrdersPage, OrderComponent, CreateComponent]
+  declarations: [OrdersPage, OrderComponent, CreateComponent, MonitoringComponent]
 })
 export class OrdersPageModule {}

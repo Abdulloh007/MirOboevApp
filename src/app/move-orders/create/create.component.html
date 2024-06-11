@@ -82,6 +82,34 @@
           </ion-item>
         </ion-list>
       </ion-col>
+      <ion-col size="12">
+        <h4 class="">Доставка</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-select label="Статус" [(ngModel)]="order.delivery.delivery_status" placeholder="">
+              <ion-select-option *ngFor="let st of delivery_status" [value]="st">{{st}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-input [(ngModel)]="order.delivery.deliver"
+              placeholder="Курьер"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input [(ngModel)]="order.delivery.deliver_phone"
+              placeholder="Телефон курьера"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input [(ngModel)]="order.delivery.deliver_vehile"
+              placeholder="Номер машины"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-input [(ngModel)]="order.delivery.deliver_company"
+              placeholder="Компания"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
       <ion-col size="8" offset="2">
         <ion-button color="success" (click)="saveOrder()" [disabled]="order.products.length === 0" expand="block">
           <ion-icon slot="start" name="save-outline"></ion-icon>

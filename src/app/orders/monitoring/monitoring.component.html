@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <!-- <ion-segment color="success" [(ngModel)]="segmentValue" (ionChange)="onPeriodSegmentChange()">
+      <ion-segment-button value="day">
+        <ion-label>Сегодня</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="month">
+        <ion-label>Этот Месяц</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="last_month">
+        <ion-label>Прошлый Месяц</ion-label>
+      </ion-segment-button>
+    </ion-segment> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-segment [(ngModel)]="showBy">
+    <ion-segment-button value="prods">
+      <ion-label>По позициям</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="docs">
+      <ion-label>По документам</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-list *ngIf="showBy == 'prods'">
+    <ion-item *ngFor="let item of results.products; let idx = index" lines="full">
+      <ion-text slot="start">{{(idx + 1).toString().padStart(2, '0')}}</ion-text>
+      <ion-label>
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.quantity }} x {{ item.price }} {{ item.currency.name }}</p>
+      </ion-label>
+      <ion-text slot="end">{{ item.sum }} {{ item.currency.name }}</ion-text>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Итого</ion-label>
+      <ion-text color="success" slot="end">{{ results.products_total }} {{ results.products[0] ? results.products[0].currency.name : '' }}</ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="showBy == 'docs'">
+    <ion-item *ngFor="let item of results.docs; let idx = index" lines="full">
+      <ion-text slot="start">{{(idx + 1).toString().padStart(2, '0')}}</ion-text>
+      <ion-label>{{ item.link }}</ion-label>
+      <ion-text slot="end">{{ item.sum }} {{ item.currency.name }}</ion-text>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Итого</ion-label>
+      <ion-text color="success" slot="end">{{ results.docs_total }} {{ results.docs[0] ? results.docs[0].currency.name : '' }}</ion-text>
+    </ion-item>
+  </ion-list> -->
+</ion-content>

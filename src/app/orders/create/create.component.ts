@@ -39,6 +39,17 @@ export class CreateComponent implements OnInit {
     currency: {
       id: '972',
       name: ""
+    },
+    delivery: {
+      have_delivery: false,
+      reciver: '',
+      reciver_phone: '',
+      reciver_address: '',
+      deliver: '',
+      deliver_phone: '',
+      deliver_vehile: '',
+      deliver_company: '',
+      delivery_status: ''
     }
   };
 
@@ -78,6 +89,8 @@ export class CreateComponent implements OnInit {
     id: '',
     name: ''
   }
+
+  delivery_status: string[] = []
 
   showMeter: boolean = false
   showClientModal: boolean = false;
@@ -121,6 +134,7 @@ export class CreateComponent implements OnInit {
       this.currencies = res
       this.currecyChage()
     })
+    this.orderService.getDeliveryStatus().subscribe((res: any) => this.delivery_status = res)
   }
 
   cancel() {

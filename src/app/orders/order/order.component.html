@@ -98,6 +98,87 @@
           </ion-item>
         </ion-list>
       </ion-col>
+      <ion-col *ngIf="order?.delivery?.have_delivery || false" size="12">
+        <h4 class="">Доставка</h4>
+      </ion-col>
+      <ion-col *ngIf="order?.delivery?.have_delivery || false" size="12">
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              Статус
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.delivery_status }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label color="primary">
+              <h1>Получатель</h1>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Имя
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.reciver }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Телефон
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.reciver_phone }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Адрес
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.reciver_address }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label color="primary">
+              <h1>Курьер</h1>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Имя
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.deliver }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Телефон
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.deliver_phone }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Номер машины
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.deliver_vehile }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Компания
+            </ion-label>
+            <ion-label>
+              {{ order?.delivery?.deliver_company }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
       <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
         <ion-button color="success" style="width: 47%;" routerLink="/orders/edit" [queryParams]="{id: order.id}">
           <ion-icon slot="start" name="create-outline"></ion-icon>

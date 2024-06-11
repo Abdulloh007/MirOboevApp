@@ -20,7 +20,7 @@
             <ion-button fill="clear" color="success" (click)="setClientModal(true)">{{ order.client ? order.client.name
               : 'Розничный покупатель' }}</ion-button>
           </ion-item>
-          <ion-item >
+          <ion-item>
             <ion-label slot="start">Мастер</ion-label>
             <ion-button fill="clear" color="success" (click)="setMasterModal(true)">{{ order.master ? order.master.name
               : 'Без мастера' }}</ion-button>
@@ -29,7 +29,7 @@
             <ion-select label="Валюта" (ionChange)="currecyChage()" [(ngModel)]="order.currency" placeholder="Валюта">
               <ion-select-option *ngFor="let cr of currencies" [value]="cr?.id">{{cr?.name}}</ion-select-option>
             </ion-select>
-        </ion-item>
+          </ion-item>
         </ion-list>
       </ion-col>
 
@@ -46,7 +46,8 @@
             </ion-button>
             <ion-label class="mo-col" (click)="prepareAction('edit', product); modal.isOpen = true">
               <h2 class="mo-wrap__text">{{ product.title }}</h2>
-              <p>{{ product.packCount }} x {{ product.price }} {{currentCurrency?.name}} {{ product.discount > 0 ? "-" + product.discount + " {{currentCurrency?.name}}" : ""}} </p>
+              <p>{{ product.packCount }} x {{ product.price }} {{currentCurrency?.name}} {{ product.discount > 0 ? "-" +
+                product.discount + currentCurrency?.name : ""}} </p>
             </ion-label>
             <ion-label class="mo-col ion-text-end" *ngIf="product.discount === 0">
               {{ product.total }} {{currentCurrency?.name}}
@@ -55,7 +56,8 @@
               <p class="mo-text__overline">{{ product.packCount * product.price }} {{currentCurrency?.name}}</p>
               {{ product.total }} {{currentCurrency?.name}}
             </ion-label>
-            <ion-button (blur)="closeContext()" (click)="contexMenu($event, product.title, product.id)" color="dark" fill="clear" slot="end">
+            <ion-button (blur)="closeContext()" (click)="contexMenu($event, product.title, product.id)" color="dark"
+              fill="clear" slot="end">
               <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
             </ion-button>
           </ion-item>
@@ -89,6 +91,50 @@
         <ion-list lines="full">
           <ion-item lines="none">
             <ion-textarea [(ngModel)]="order.comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12">
+        <h4 class="">Доставка</h4>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-checkbox [(ngModel)]="order.delivery.have_delivery" labelPlacement="end">Доставить</ion-checkbox>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-select label="Статус" [(ngModel)]="order.delivery.delivery_status" placeholder="">
+              <ion-select-option *ngFor="let st of delivery_status" [value]="st">{{st}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.reciver"
+              placeholder="Получатель"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.reciver_phone"
+              placeholder="Телефон получателя"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.reciver_address"
+              placeholder="Адрес получателя"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.deliver"
+              placeholder="Курьер"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.deliver_phone"
+              placeholder="Телефон курьера"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.deliver_vehile"
+              placeholder="Номер машины"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="order.delivery.have_delivery" lines="none">
+            <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.deliver_company"
+              placeholder="Компания"></ion-input>
           </ion-item>
         </ion-list>
       </ion-col>

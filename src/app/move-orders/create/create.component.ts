@@ -31,7 +31,15 @@ export class CreateComponent implements OnInit {
     comment: '',
     products: [],
     storageOut: "",
-    storageIn: ""
+    storageIn: "",
+    delivery: {
+      have_delivery: false,
+      deliver: '',
+      deliver_phone: '',
+      deliver_vehile: '',
+      deliver_company: '',
+      delivery_status: ''
+    }
   };
 
   newProduct: any | Product = {
@@ -66,6 +74,8 @@ export class CreateComponent implements OnInit {
   productMyBalance: any
   isPriceOpen: boolean = false;
   prices: any[] = [];
+
+  delivery_status: string[] = []
 
   showMeter: boolean = false
   showStorageInModal: boolean = false;
@@ -107,6 +117,7 @@ export class CreateComponent implements OnInit {
       }
     });
     this.autoSaveOnLocalStorage();
+    this.orderService.getDeliveryStatus().subscribe((res: any) => this.delivery_status = res)
   }
 
   cancel() {

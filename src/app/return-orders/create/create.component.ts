@@ -10,7 +10,7 @@ import { MasterService } from 'src/app/api/master.service';
 import { ProductsService } from 'src/app/api/products.service';
 import { ReturnsOrdersService } from 'src/app/api/returns-orders.service';
 import { ToastService } from 'src/app/api/toast.service';
-import { Order } from 'src/app/interfaces/Order';
+import { Order, ReturnOrder } from 'src/app/interfaces/Order';
 import { Product } from 'src/app/interfaces/Product';
 
 @Component({
@@ -25,7 +25,7 @@ export class CreateComponent  implements OnInit {
   modalTitle: string = 'Добавить товар';
   modalButton: string = 'Добавить';
 
-  order: Order = {
+  order: ReturnOrder = {
     id: 0,
     link: 'Новый Заказ',
     date: new Date(),

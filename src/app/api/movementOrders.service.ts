@@ -60,4 +60,14 @@ export class MovementOrdersService {
   //   })
   // }
 
+  getDeliveryStatus() {
+    return this.http.get(this.hostControlSvr.defineHost() + '/movement-delivery', {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  } 
+
 }

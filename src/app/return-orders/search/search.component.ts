@@ -178,9 +178,11 @@ export class SearchComponent  implements OnInit {
     if (this.filters.order.id != '') this.filters.order.isActive = true 
     this.ordersSvr.searchRealization(this.filters).subscribe((res: any) => {
       this.searchResult = res
+      this.loaderSvr.showLoader = false
     },(err: any) => {
       this.toast.presentToast('Не удалось загрузить данные!', 'warning')
-    }, () => this.loaderSvr.showLoader = false)
+      this.loaderSvr.showLoader = false
+    })
   }
 
   cancel() {

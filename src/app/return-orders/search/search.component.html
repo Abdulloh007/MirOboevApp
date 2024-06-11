@@ -4,10 +4,11 @@
       <ion-back-button default-href="#"></ion-back-button>
     </ion-buttons>
     <ion-item>
-      <ion-input slot="start" [(ngModel)]="filters.order.id" placeholder="Введите номер заказа"></ion-input>
-      <ion-button color="success" slot="end" fill="clear" (click)="scan()">
-        <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
-      </ion-button>
+      <ion-input [(ngModel)]="filters.order.id" placeholder="Введите номер заказа">
+        <ion-button color="success" slot="end" fill="clear" (click)="scan()">
+          <ion-icon slot="icon-only" name="scan-outline"></ion-icon>
+        </ion-button>
+      </ion-input>
     </ion-item>
   </ion-toolbar>
 </ion-header>

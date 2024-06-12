@@ -70,4 +70,13 @@ export class MovementOrdersService {
     })
   } 
 
+  getDeliveriesMonitor() {
+    return this.http.get(this.hostControlSvr.defineHost() + '/mo-monitoring', {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  } 
 }

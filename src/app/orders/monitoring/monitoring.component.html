@@ -1,48 +1,47 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-segment color="success" [(ngModel)]="segmentValue" (ionChange)="onPeriodSegmentChange()">
+    <ion-segment color="success" [(ngModel)]="segmentValue" >
       <ion-segment-button value="sends">
         <ion-label>Отправка</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="incomes">
-        <ion-label>Приемка</ion-label>
+      <ion-segment-button value="delivered">
+        <ion-label>Доставленные</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-segment [(ngModel)]="showBy">
-    <ion-segment-button value="prods">
-      <ion-label>По позициям</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="docs">
-      <ion-label>По документам</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-  <ion-list *ngIf="showBy == 'prods'">
-    <ion-item *ngFor="let item of results.products; let idx = index" lines="full">
-      <ion-text slot="start">{{(idx + 1).toString().padStart(2, '0')}}</ion-text>
+  <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list lines="full" *ngIf="segmentValue == 'sends'">
+    <ion-item *ngFor="let order of sends" routerLink="/orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
       <ion-label>
-        <h4>{{ item.title }}</h4>
-        <p>{{ item.quantity }} x {{ item.price }} {{ item.currency.name }}</p>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
       </ion-label>
-      <ion-text slot="end">{{ item.sum }} {{ item.currency.name }}</ion-text>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Итого</ion-label>
-      <ion-text color="success" slot="end">{{ results.products_total }} {{ results.products[0] ? results.products[0].currency.name : '' }}</ion-text>
+      <ion-text slot="end" color="primary"><p>{{ order.status }}</p></ion-text>
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="showBy == 'docs'">
-    <ion-item *ngFor="let item of results.docs; let idx = index" lines="full">
-      <ion-text slot="start">{{(idx + 1).toString().padStart(2, '0')}}</ion-text>
-      <ion-label>{{ item.link }}</ion-label>
-      <ion-text slot="end">{{ item.sum }} {{ item.currency.name }}</ion-text>
+  <ion-list lines="full" *ngIf="segmentValue == 'delivered'">
+    <ion-item *ngFor="let order of delivered" routerLink="/orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
+      </ion-label>
+      <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
     </ion-item>
-    <ion-item lines="none">
-      <ion-label>Итого</ion-label>
-      <ion-text color="success" slot="end">{{ results.docs_total }} {{ results.docs[0] ? results.docs[0].currency.name : '' }}</ion-text>
-    </ion-item>
-  </ion-list> -->
+  </ion-list>
 </ion-content>
+
+<app-tabbbar></app-tabbbar>

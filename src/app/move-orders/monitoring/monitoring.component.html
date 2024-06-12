@@ -1,0 +1,78 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-segment scrollable="true" color="success" [(ngModel)]="segmentValue" >
+      <ion-segment-button value="sends">
+        <ion-label>Отправка</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="recives">
+        <ion-label>Приемка</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="delivered">
+        <ion-label>Доставленные</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="recived">
+        <ion-label>Полученные</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list lines="full" *ngIf="segmentValue == 'sends'">
+    <ion-item *ngFor="let order of sends" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
+      </ion-label>
+      <ion-text slot="end" color="primary"><p>{{ order.status }}</p></ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-list lines="full" *ngIf="segmentValue == 'recives'">
+    <ion-item *ngFor="let order of recives" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
+      </ion-label>
+      <ion-text slot="end" color="primary"><p>{{ order.status }}</p></ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-list lines="full" *ngIf="segmentValue == 'delivered'">
+    <ion-item *ngFor="let order of delivered" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
+      </ion-label>
+      <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
+    </ion-item>
+  </ion-list><ion-list lines="full" *ngIf="segmentValue == 'recived'">
+    <ion-item *ngFor="let order of recived" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ order.link }}</h2>
+        <p>
+          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+          {{ order.responsible }}
+        </p>
+      </ion-label>
+      <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<app-tabbbar></app-tabbbar>

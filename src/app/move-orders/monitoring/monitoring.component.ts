@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonRefresher } from '@ionic/angular';
 import { LoaderService } from 'src/app/api/loader.service';
-import { OrdersService } from 'src/app/api/orders.service';
+import { MovementOrdersService } from 'src/app/api/movementOrders.service';
 import { ToastService } from 'src/app/api/toast.service';
 
 @Component({
@@ -11,12 +11,15 @@ import { ToastService } from 'src/app/api/toast.service';
 })
 export class MonitoringComponent  implements OnInit {
   @ViewChild(IonRefresher) refresher!: IonRefresher
+
   segmentValue:  string = 'sends'
   sends: any[] = []
+  recives: any[] = []
   delivered: any[] = []
+  recived: any[] = []
 
   constructor(
-    private orderSrv: OrdersService,
+    private orderSrv: MovementOrdersService,
     private loaderSrv: LoaderService,
     private toast: ToastService
   ) { }
@@ -29,13 +32,15 @@ export class MonitoringComponent  implements OnInit {
     this.loaderSrv.showLoader = true
     this.orderSrv.getDeliveriesMonitor().subscribe((res: any) => {
       this.sends = res.sends
+      this.recives = res.recives
       this.delivered = res.delivered
-      this.loaderSrv.showLoader = false 
-      this.refresher.complete()
-    }, err => {
+      this.recived = res.recived
       this.loaderSrv.showLoader = false
       this.refresher.complete()
-      this.toast.presentToast('Не удалось загрузить данные', 'warning')
+      }, err => {
+        this.loaderSrv.showLoader = false
+        this.toast.presentToast('Не удалось загрузить данные', 'warning')
+        this.refresher.complete()
     })
   }
 }

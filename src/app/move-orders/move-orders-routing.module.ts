@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MoveOrdersPage } from './move-orders.page';
 import { OrderComponent } from './order/order.component';
 import { CreateComponent } from './create/create.component';
+import { MonitoringComponent } from './monitoring/monitoring.component';
 
 const routes: Routes = [
   {
@@ -21,7 +22,11 @@ const routes: Routes = [
   {
     path: 'edit',
     component: CreateComponent
-  }
+  },
+  {
+    path: 'monitoring',
+    component: MonitoringComponent
+  },
 ];
 
 @NgModule({

@@ -14,7 +14,11 @@ import * as printJS from 'print-js';
 })
 export class OrderComponent  implements OnInit {
   @ViewChild('pdf', { static: true }) pdfViewer!: ElementRef | any;
-  order: any = {};
+  order: any = {
+    delivery: {
+      delivery_status: ''
+    }
+  };
   pdfUrl: any;
   userRole: Role = {
     name: '',
@@ -23,6 +27,7 @@ export class OrderComponent  implements OnInit {
   printerList: PrinterInterface[] = []
   showPrinterList: boolean = false
   printWithComment: boolean = false
+  delivery_status: any[] = []
 
   constructor(
     private orderService: MovementOrdersService,
@@ -47,6 +52,7 @@ export class OrderComponent  implements OnInit {
           });
         }
       });
+      this.orderService.getDeliveryStatus().subscribe((res: any) => this.delivery_status = res)
   }
 
   async printTest(printer: PrinterInterface) {
@@ -82,6 +88,28 @@ export class OrderComponent  implements OnInit {
   setShowPrinter(isOpen: boolean) {
     this.printerList = JSON.parse(localStorage.getItem('printers') || '[]')
     this.showPrinterList = isOpen
+  }
+
+  changeStatus() {
+    let newStatus = this.order.delivery.delivery_status.replaceAll(" ", "")
+    console.log(newStatus);
+    
+    let body = {
+      id: this.order.id,
+      delivery_status: newStatus
+    }
+
+    this.loaderSvr.showLoader = true
+    this.toast.presentToast('Сохранение заказа...');
+    this.orderService.updateDeliveryStatus(body).subscribe((res: any) => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast('Заказ успешно сохранен');
+    }, (err: any) => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast('Не удалось сохранить заказ', 'danger')
+    });
+
+
   }
 
 }

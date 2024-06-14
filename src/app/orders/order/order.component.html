@@ -36,7 +36,7 @@
               {{ order.author }}
             </ion-label>
           </ion-item>
-          <ion-item >
+          <ion-item>
             <ion-label>
               Клиент
             </ion-label>
@@ -65,7 +65,8 @@
             <div class="mo-row__wrap">
               <ion-label class="mo-col">
                 <h2>{{ product.title }}</h2>
-                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }} {{order.currency?.name}} {{product.discount > 0 ? "-" + product.discount + " {{order.currency?.name}}" : ""}}</p>
+                <p>{{ product.packCount }} {{ product.unit }} x {{ product.price }} {{order.currency?.name}}
+                  {{product.discount > 0 ? "-" + product.discount + " {{order.currency?.name}}" : ""}}</p>
               </ion-label>
               <ion-label slot="end" class="ion-text-end mo-col" *ngIf="product.discount === 0">
                 {{ product.price * product.packCount }} {{order.currency?.name}}
@@ -189,17 +190,23 @@
           Печать
         </ion-button>
       </ion-col>
-      <ion-col size="12"  style="display: flex;" class="ion-justify-content-between">
-        <ion-button *ngIf="userRole.degree <= 3" color="warning" routerLink="/income/create" style="width: 47%;" [queryParams]="{base: order.id}">
+      <ion-col size="12" style="display: flex;" class="ion-justify-content-between">
+        <ion-button *ngIf="userRole.degree <= 3" color="warning" routerLink="/income/create" style="width: 47%;"
+          [queryParams]="{base: order.id}">
           <ion-icon slot="start" name="cash-outline"></ion-icon>
-          ввод оплаты
+          Ввод оплаты
         </ion-button>
-        <ion-button (click)="setShowPrinter(true)" style="width: 47%;" color="danger" >
+        <ion-button (click)="setShowPrinter(true)" style="width: 47%;" color="danger">
           <ion-icon slot="start" name="print-outline"></ion-icon>
           Печать IP/SW
         </ion-button>
       </ion-col>
-      <ion-col>
+      <ion-col size="12">
+        <ion-item color="success">
+          <ion-select label="Статус" label-placement="floating" [(ngModel)]="order.delivery.delivery_status" (ionChange)="changeStatus()">
+            <ion-select-option [value]="status" *ngFor="let status of delivery_status">{{ status }}</ion-select-option>
+          </ion-select>
+        </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -214,21 +221,27 @@
           <ion-title>Выберите печать</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content >
+      <ion-content>
         <ion-list lines="full">
-          <ion-item >
-            <ion-label color="danger"><h1>IP Принтеры</h1></ion-label>
+          <ion-item>
+            <ion-label color="danger">
+              <h1>IP Принтеры</h1>
+            </ion-label>
           </ion-item>
-          <ion-item button (click)="printTest(printer)" *ngFor="let printer of printerList">{{ printer.name }}</ion-item>
+          <ion-item button (click)="printTest(printer)" *ngFor="let printer of printerList">{{ printer.name
+            }}</ion-item>
           <ion-item *ngIf="printerList.length === 0">
-            <ion-label >Пусто</ion-label>
+            <ion-label>Пусто</ion-label>
           </ion-item>
-          <ion-item >
-            <ion-label color="danger"><h1>Принтеры Сервера</h1></ion-label>
+          <ion-item>
+            <ion-label color="danger">
+              <h1>Принтеры Сервера</h1>
+            </ion-label>
           </ion-item>
-          <ion-item button (click)="printOnServer(printer)" *ngFor="let printer of serverPrinters">{{ printer.name }}</ion-item>
+          <ion-item button (click)="printOnServer(printer)" *ngFor="let printer of serverPrinters">{{ printer.name
+            }}</ion-item>
           <ion-item *ngIf="serverPrinters.length === 0">
-            <ion-label >Пусто</ion-label>
+            <ion-label>Пусто</ion-label>
           </ion-item>
           <ion-item lines="none">
             <ion-checkbox [(ngModel)]="printWithComment" labelPlacement="end">Печать комментария</ion-checkbox>

@@ -275,9 +275,13 @@ export class CreateComponent implements OnInit {
   }
 
   saveOrder() {
+    let body = this.order
+    body.delivery.delivery_status = body.delivery.delivery_status.replace(" ", "")
+    console.log(body.delivery.delivery_status);
+    
     this.loaderSvr.showLoader = true
     this.toast.presentToast('Сохранение заказа...');
-    this.orderService.createOrder(this.order).subscribe((res: any) => {
+    this.orderService.createOrder(body).subscribe((res: any) => {
       this.router.navigate(['/orders']).then(() => {
         window.location.reload();
       });

@@ -18,7 +18,11 @@ import { PrintersService } from 'src/app/api/printers.service';
 })
 export class OrderComponent implements OnInit {
   @ViewChild('pdf', { static: true }) pdfViewer!: ElementRef | any;
-  order: any = {};
+  order: any = {
+    delivery: {
+      delivery_status: ''
+    }
+  };
   pdfUrl: any;
   userRole: Role = {
     name: '',
@@ -29,6 +33,7 @@ export class OrderComponent implements OnInit {
   showPrinterList: boolean = false
   printWithComment: boolean = false
   currencies: any[] = [];
+  delivery_status: any[] = []
 
   constructor(
     private orderService: OrdersService,
@@ -40,7 +45,7 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (localStorage.getItem('role')) this.userRole = JSON.parse(localStorage.getItem('role') || JSON.stringify(this.userRole)) 
+    if (localStorage.getItem('role')) this.userRole = JSON.parse(localStorage.getItem('role') || JSON.stringify(this.userRole))
     this.route.queryParams.subscribe((params: any) => {
       if (params.id === 0 || params.id === '0') {
         this.order = JSON.parse(localStorage.getItem('orderDraft') || '{}');
@@ -59,6 +64,7 @@ export class OrderComponent implements OnInit {
         });
       }
     });
+    this.orderService.getDeliveryStatus().subscribe((res: any) => this.delivery_status = res)
   }
 
   printOrder() {
@@ -76,7 +82,7 @@ export class OrderComponent implements OnInit {
         const blob = new Blob([uintArray], { type: 'application/octet-stream' });
         this.pdfUrl = URL.createObjectURL(blob);
         setTimeout(() => printJS({ printable: 'pdf', type: 'html' }), 1000)
-        
+
       }
       this.loaderSvr.showLoader = false
     }, (err: any) => {
@@ -90,13 +96,13 @@ export class OrderComponent implements OnInit {
     this.orderService.getOrderFormWithParams(this.order.id, this.printWithComment).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
         await Printer.printTest({ ...printer, value: res.file })
-        .then((res: any) => this.toast.presentToast(res?.status), (err: any) => this.toast.presentToast(err?.status, 'danger'))
-        .catch((err: any) => this.toast.presentToast(err?.status, 'danger'))
-        .finally(() => {
-          this.showPrinterList = false
-          this.loaderSvr.showLoader = true
-        });
-      }else {
+          .then((res: any) => this.toast.presentToast(res?.status), (err: any) => this.toast.presentToast(err?.status, 'danger'))
+          .catch((err: any) => this.toast.presentToast(err?.status, 'danger'))
+          .finally(() => {
+            this.showPrinterList = false
+            this.loaderSvr.showLoader = true
+          });
+      } else {
         const blobData = atob(res.file);
         const uintArray = new Uint8Array(blobData.length);
         for (let i = 0; i < blobData.length; i++) {
@@ -105,7 +111,7 @@ export class OrderComponent implements OnInit {
         const blob = new Blob([uintArray], { type: 'application/octet-stream' });
         this.pdfUrl = URL.createObjectURL(blob);
         setTimeout(() => printJS({ printable: 'pdf', type: 'html' }), 1000)
-        
+
       }
       this.loaderSvr.showLoader = false;
 
@@ -140,5 +146,26 @@ export class OrderComponent implements OnInit {
   }
 
 
+  changeStatus() {
+    let newStatus = this.order.delivery.delivery_status.replaceAll(" ", "")
+    console.log(newStatus);
+    
+    let body = {
+      id: this.order.id,
+      delivery_status: newStatus
+    }
+
+    this.loaderSvr.showLoader = true
+    this.toast.presentToast('Сохранение заказа...');
+    this.orderService.updateDeliveryStatus(body).subscribe((res: any) => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast('Заказ успешно сохранен');
+    }, (err: any) => {
+      this.loaderSvr.showLoader = false
+      this.toast.presentToast('Не удалось сохранить заказ', 'danger')
+    });
+
+
+  }
 
 }

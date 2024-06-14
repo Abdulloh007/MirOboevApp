@@ -79,8 +79,18 @@ export class OrdersService {
     })
   } 
 
-  getDeliveriesMonitor() {
-    return this.http.get(this.hostControlSvr.defineHost() + '/co-monitoring', {
+  updateDeliveryStatus(body: any) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/delivery', body, {
+      headers: {
+        'Content-Type': 'application/json, charset=utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('token')
+      }
+    })
+  } 
+
+  getDeliveriesMonitor(body: any) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/co-monitoring', body, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',

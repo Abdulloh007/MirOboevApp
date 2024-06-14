@@ -1,47 +1,98 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-segment color="success" [(ngModel)]="segmentValue" >
-      <ion-segment-button value="sends">
-        <ion-label>Отправка</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="delivered">
-        <ion-label>Доставленные</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-title>Табло доставок</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
 
-  <ion-list lines="full" *ngIf="segmentValue == 'sends'">
-    <ion-item *ngFor="let order of sends" routerLink="/orders/order" [queryParams]="{id: order.id}">
-      <ion-icon name="document-text-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>{{ order.link }}</h2>
-        <p>
-          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
-          {{ order.responsible }}
-        </p>
-      </ion-label>
-      <ion-text slot="end" color="primary"><p>{{ order.status }}</p></ion-text>
-    </ion-item>
-  </ion-list>
-  <ion-list lines="full" *ngIf="segmentValue == 'delivered'">
-    <ion-item *ngFor="let order of delivered" routerLink="/orders/order" [queryParams]="{id: order.id}">
-      <ion-icon name="document-text-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>{{ order.link }}</h2>
-        <p>
-          <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
-          {{ order.responsible }}
-        </p>
-      </ion-label>
-      <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
-    </ion-item>
-  </ion-list>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filter.subdivision.isActive">Подразделение</ion-checkbox>
+            <ion-input placeholder="Подразделение" [disabled]="!filter.subdivision.isActive" [clearOnEdit]="true"
+              (input)="searchSubdivision($event)" type="text" [(ngModel)]="filter.subdivision.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end" [(ngModel)]="filter.storage.isActive">Склад</ion-checkbox>
+            <ion-input placeholder="Склад" [disabled]="!filter.storage.isActive" [clearOnEdit]="true"
+              (input)="searchStorage($event)" type="text" [(ngModel)]="filter.storage.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filter.manager.isActive">Менеджер</ion-checkbox>
+              <ion-input placeholder="Менеджер" [disabled]="!filter.manager.isActive" [clearOnEdit]="true"
+              (input)="searchManager($event)" type="text" [(ngModel)]="filter.manager.name"></ion-input>
+          </ion-item>
+          <ion-button (click)="onPeriodSegmentChange()" color="success" expand="block">Поиск</ion-button>
+
+        </ion-list>
+
+        <div class="mo-data__options f1" *ngIf="subdivisionSearchResult.length > 0">
+          <div (click)="setSubdivion(subdiv)" class="mo-do__item" *ngFor="let subdiv of subdivisionSearchResult">
+            {{subdiv.name}}</div>
+        </div>
+        <div class="mo-data__options f2" *ngIf="storageSearchResult.length > 0">
+          <div (click)="setStorage(storage)" class="mo-do__item" *ngFor="let storage of storageSearchResult">{{storage}}
+          </div>
+        </div>
+        <div class="mo-data__options f3" *ngIf="managerSearchResult.length > 0">
+          <div (click)="setManager(manager)" class="mo-do__item" *ngFor="let manager of managerSearchResult">{{manager.name}}</div>
+        </div>
+
+      </ion-col>
+      <ion-col size="12">
+        <ion-segment color="success" [(ngModel)]="segmentValue">
+          <ion-segment-button value="sends">
+            <ion-label>Отправка</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="delivered">
+            <ion-label>Доставленные</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      <ion-col size="12">
+        <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full" *ngIf="segmentValue == 'sends'">
+          <ion-item *ngFor="let order of sends" routerLink="/orders/order" [queryParams]="{id: order.id}">
+            <ion-icon name="document-text-outline" slot="start"></ion-icon>
+            <ion-label>
+              <h2>{{ order.link }}</h2>
+              <p>
+                <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+                {{ order.responsible }}
+              </p>
+            </ion-label>
+            <ion-text slot="end" color="primary">
+              <p>{{ order.status }}</p>
+            </ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list lines="full" *ngIf="segmentValue == 'delivered'">
+          <ion-item *ngFor="let order of delivered" routerLink="/orders/order" [queryParams]="{id: order.id}">
+            <ion-icon name="document-text-outline" slot="start"></ion-icon>
+            <ion-label>
+              <h2>{{ order.link }}</h2>
+              <p>
+                <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+                {{ order.responsible }}
+              </p>
+            </ion-label>
+            <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <app-tabbbar></app-tabbbar>

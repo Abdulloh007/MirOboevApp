@@ -19,6 +19,7 @@ export class MonitoringComponent  implements OnInit {
   recives: any[] = []
   delivered: any[] = []
   recived: any[] = []
+  ect: any[] = []
   filter: any = {
     subdivision: {
       id: '',
@@ -29,10 +30,22 @@ export class MonitoringComponent  implements OnInit {
       id: '',
       name: '',
       isActive: false
+    },
+    storageOut: {
+      id: '',
+      name: '',
+      isActive: false
+    },
+    storageIn: {
+      id: '',
+      name: '',
+      isActive: false
     }
   }
   subdivisionSearchResult: any[] = []
   storageSearchResult: any[] = []
+  storageOutSearchResult: any[] = []
+  storageInSearchResult: any[] = []
 
   constructor(
     private orderSrv: MovementOrdersService,
@@ -54,6 +67,7 @@ export class MonitoringComponent  implements OnInit {
       this.recives = res.recives
       this.delivered = res.delivered
       this.recived = res.recived
+      this.ect = res.ect
       this.loaderSrv.showLoader = false
       this.refresher.complete()
       }, err => {
@@ -83,6 +97,26 @@ export class MonitoringComponent  implements OnInit {
     }
   }
 
+  searchStorageOut(event: any) {
+    if (event.target.value.length >= 3) {
+      this.storageService.findStorage(event.target.value).subscribe((res: any) => {
+        this.storageOutSearchResult = res;
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.storageOutSearchResult = [];
+    }
+  }
+
+  searchStorageIn(event: any) {
+    if (event.target.value.length >= 3) {
+      this.storageService.findStorage(event.target.value).subscribe((res: any) => {
+        this.storageInSearchResult = res;
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.storageInSearchResult = [];
+    }
+  }
+
   setSubdivion(item: any) {
     this.filter.subdivision = {
       id: item.id,
@@ -95,5 +129,15 @@ export class MonitoringComponent  implements OnInit {
   setStorage(storage: string) {
     this.filter.storage.name = storage
     this.storageSearchResult = []
+  }
+
+  setStorageOut(storage: string) {
+    this.filter.storageOut.name = storage
+    this.storageOutSearchResult = []
+  }
+
+  setStorageIn(storage: string) {
+    this.filter.storageIn.name = storage
+    this.storageInSearchResult = []
   }
 }

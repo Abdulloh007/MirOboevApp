@@ -9,7 +9,6 @@
     <ion-row>
       <ion-col size="12">
         <ion-list>
-    
           <ion-item>
             <ion-checkbox slot="start" labelPlacement="end"
               [(ngModel)]="filter.subdivision.isActive">Подразделение</ion-checkbox>
@@ -22,9 +21,19 @@
               <ion-input placeholder="Склад" [disabled]="!filter.storage.isActive" [clearOnEdit]="true"
               (input)="searchStorage($event)" type="text" [(ngModel)]="filter.storage.name"></ion-input>
           </ion-item>
-          
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filter.storageOut.isActive">Склад Отправитель</ion-checkbox>
+              <ion-input placeholder="Склад" [disabled]="!filter.storageOut.isActive" [clearOnEdit]="true"
+              (input)="searchStorage($event)" type="text" [(ngModel)]="filter.storageOut.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end"
+              [(ngModel)]="filter.storageIn.isActive">Склад Получатель</ion-checkbox>
+              <ion-input placeholder="Склад" [disabled]="!filter.storageIn.isActive" [clearOnEdit]="true"
+              (input)="searchStorage($event)" type="text" [(ngModel)]="filter.storageIn.name"></ion-input>
+          </ion-item>
           <ion-button (click)="onPeriodSegmentChange()" color="success" expand="block">Поиск</ion-button>
-          
         </ion-list>
     
         <div class="mo-data__options f1" *ngIf="subdivisionSearchResult.length > 0">
@@ -32,6 +41,12 @@
         </div>
         <div class="mo-data__options f2" *ngIf="storageSearchResult.length > 0">
           <div (click)="setStorage(storage)" class="mo-do__item" *ngFor="let storage of storageSearchResult">{{storage}}</div>
+        </div>
+        <div class="mo-data__options f3" *ngIf="storageOutSearchResult.length > 0">
+          <div (click)="setStorageOut(storage)" class="mo-do__item" *ngFor="let storage of storageOutSearchResult">{{storage}}</div>
+        </div>
+        <div class="mo-data__options f4" *ngIf="storageInSearchResult.length > 0">
+          <div (click)="setStorageIn(storage)" class="mo-do__item" *ngFor="let storage of storageInSearchResult">{{storage}}</div>
         </div>
         
       </ion-col>
@@ -47,6 +62,9 @@
           </ion-segment-button>
           <ion-segment-button value="recived">
             <ion-label>Полученные</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="ect">
+            <ion-label>Прочее</ion-label>
           </ion-segment-button>
         </ion-segment>
       <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">
@@ -100,6 +118,21 @@
     <ion-col size="12">
       <ion-list lines="full" *ngIf="segmentValue == 'recived'">
         <ion-item *ngFor="let order of recived" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
+          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h2>{{ order.link }}</h2>
+            <p>
+              <!-- <b>{{ order.sum }} {{ order.currency.name }}</b>  -->
+              {{ order.responsible }}
+            </p>
+          </ion-label>
+          <ion-text slot="end" color="primary">{{ order.status }}</ion-text>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size="12">
+      <ion-list lines="full" *ngIf="segmentValue == 'ect'">
+        <ion-item *ngFor="let order of ect" routerLink="/move-orders/order" [queryParams]="{id: order.id}">
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
           <ion-label>
             <h2>{{ order.link }}</h2>

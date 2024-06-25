@@ -39,7 +39,9 @@ export class MonitoringComponent  implements OnInit {
   subdivisionSearchResult: any[] = []
   storageSearchResult: any[] = []
   managerSearchResult: any[] = []
+  orderHistory: any[] = []
 
+  isModalOpen: boolean = false;
   constructor(
     private orderSrv: OrdersService,
     private loaderSrv: LoaderService,
@@ -118,5 +120,22 @@ export class MonitoringComponent  implements OnInit {
       isActive: true
     }
     this.managerSearchResult = []
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
+
+  getHistory(e: Event, id: string) {
+    e.preventDefault()
+    this.loaderSrv.showLoader = true
+    this.orderSrv.getOrderHistory(id).subscribe((res: any) => {
+      this.orderHistory = res
+      this.setOpen(true)
+      this.loaderSrv.showLoader = false
+    }, err => {
+      this.loaderSrv.showLoader = false
+      this.toast.presentToast('Не удалось загрузить данные!', 'danger')
+    })
   }
 }

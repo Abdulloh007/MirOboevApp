@@ -61,7 +61,7 @@
       </ion-col>
       <ion-col size="12">
         <ion-list lines="full" *ngIf="segmentValue == 'sends'">
-          <ion-item *ngFor="let order of sends" routerLink="/orders/order" [queryParams]="{id: order.id}">
+          <ion-item *ngFor="let order of sends" routerLink="/orders/order" [queryParams]="{id: order.id}" (contextmenu)="getHistory($event, order.id)">
             <ion-icon name="document-text-outline" slot="start"></ion-icon>
             <ion-label>
               <h2>{{ order.link }}</h2>
@@ -78,7 +78,7 @@
       </ion-col>
       <ion-col size="12">
         <ion-list lines="full" *ngIf="segmentValue == 'delivered'">
-          <ion-item *ngFor="let order of delivered" routerLink="/orders/order" [queryParams]="{id: order.id}">
+          <ion-item *ngFor="let order of delivered" routerLink="/orders/order" [queryParams]="{id: order.id}" (contextmenu)="getHistory($event, order.id)">
             <ion-icon name="document-text-outline" slot="start"></ion-icon>
             <ion-label>
               <h2>{{ order.link }}</h2>
@@ -93,6 +93,38 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>История заказа</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false); orderHistory = []" [strong]="true">Ok</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="full">
+          <ion-item class="mo-row mo-prod__row balance">
+            <span class="mo-col">Статус</span>
+            <span class="mo-col">Ответственный</span>
+            <span class="mo-col">Потрачено</span>
+          </ion-item>
+          <ion-item class="mo-row mo-prod__row balance" *ngFor="let item of orderHistory">
+            <span class="mo-col">{{ item.status }}</span>
+            <span class="mo-col">{{ item.relative }}</span>
+            <span class="mo-col">{{ item.time_spended }}</span>
+          </ion-item>
+          <!-- <ion-item lines="none" class="mo-row mo-prod__row balance">
+            <span class="mo-col">Итого</span>
+            <span class="mo-col"></span>
+            <span class="mo-col">{{ getLocalBalnace() }}</span>
+          </ion-item> -->
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
 <app-tabbbar></app-tabbbar>

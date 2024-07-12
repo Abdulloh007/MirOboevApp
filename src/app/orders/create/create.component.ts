@@ -56,6 +56,7 @@ export class CreateComponent implements OnInit {
   newProduct: any | Product = {
     id: 0,
     title: '',
+    nick: '',
     price: 0,
     packCount: 0,
     discount: 0,

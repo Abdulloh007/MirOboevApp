@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonRefresher } from '@ionic/angular';
 import { LoaderService } from 'src/app/api/loader.service';
 import { MovementOrdersService } from 'src/app/api/movementOrders.service';
+import { ProductsService } from 'src/app/api/products.service';
 import { StorageService } from 'src/app/api/storage.service';
 import { SubdivisionService } from 'src/app/api/subdivision.service';
 import { ToastService } from 'src/app/api/toast.service';
@@ -40,12 +41,25 @@ export class MonitoringComponent  implements OnInit {
       id: '',
       name: '',
       isActive: false
+    },
+    product: {
+      id: '',
+      name: '',
+      isActive: false
+    },
+    number: {
+      id: '',
+      name: '',
+      isActive: false
     }
   }
   subdivisionSearchResult: any[] = []
-  storageSearchResult: any[] = []
-  storageOutSearchResult: any[] = []
-  storageInSearchResult: any[] = []
+  storageSearchResult: any[]     = []
+  storageOutSearchResult: any[]  = []
+  storageInSearchResult: any[]   = []
+  productSearchResult: any[]     = []
+  numberSearchResult: any[]      = []
+
   orderHistory: any[] = []
 
   isModalOpen: boolean = false;
@@ -55,6 +69,7 @@ export class MonitoringComponent  implements OnInit {
     private toast: ToastService,
     private subdivisionSrv: SubdivisionService,
     private storageService: StorageService,
+    private producSrv: ProductsService
 
   ) { }
 
@@ -119,6 +134,26 @@ export class MonitoringComponent  implements OnInit {
     }
   }
 
+  searchProduct(event: any) {
+    if (event.target.value.length >= 3) {
+      this.producSrv.searchProducts(event.target.value).subscribe((res: any) => {
+        this.productSearchResult = res;
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.productSearchResult = [];
+    }
+  }
+
+  searchNumber(event: any) {
+    if (event.target.value.length >= 3) {
+      this.orderSrv.getOrder(event.target.value).subscribe((res: any) => {
+        this.numberSearchResult = [res];
+      }, (err: any) => this.toast.presentToast('Данные не найдены', 'warning'));
+    } else {
+      this.numberSearchResult = [];
+    }
+  }
+
   setSubdivion(item: any) {
     this.filter.subdivision = {
       id: item.id,
@@ -141,6 +176,16 @@ export class MonitoringComponent  implements OnInit {
   setStorageIn(storage: string) {
     this.filter.storageIn.name = storage
     this.storageInSearchResult = []
+  }
+
+  setProduct(product: string) {
+    this.filter.product.name = product
+    this.productSearchResult = []
+  }
+  
+  setNumber(number: string) {
+    this.filter.number.name = number
+    this.numberSearchResult = []
   }
 
   setOpen(isOpen: boolean) {

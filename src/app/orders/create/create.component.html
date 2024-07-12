@@ -26,7 +26,7 @@
               : 'Без мастера' }}</ion-button>
           </ion-item>
           <ion-item lines="none">
-            <ion-select label="Валюта" (ionChange)="currecyChage()" [(ngModel)]="order.currency" placeholder="Валюта">
+            <ion-select label="Валюта" (ionChange)="currecyChage()" [(ngModel)]="order.currency" placeholder="Валюта" required>
               <ion-select-option *ngFor="let cr of currencies" [value]="cr?.id">{{cr?.name}}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -114,7 +114,7 @@
           </ion-item>
           <ion-item *ngIf="order.delivery.have_delivery">
             <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.reciver_phone"
-              placeholder="Телефон получателя"></ion-input>
+              placeholder="Телефон получателя" [required]="order.delivery.have_delivery"></ion-input>
           </ion-item>
           <ion-item *ngIf="order.delivery.have_delivery">
             <ion-input [disabled]="!order.delivery.have_delivery" [(ngModel)]="order.delivery.reciver_address"
@@ -171,6 +171,11 @@
             <ion-label position="floating">Наименование</ion-label>
             <ion-input [clearOnEdit]="true" (input)="searchProduct($event)" type="text" [(ngModel)]="newProduct.title"
               helperText="Введите больше трех символов для подсказки"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Синоним</ion-label>
+            <ion-input type="text" [(ngModel)]="newProduct.nick"
+              helperText="Заменяющее имя товара"></ion-input>
           </ion-item>
           <ion-item *ngIf="showMeter">
             <ion-label class="mo-meter-switch">

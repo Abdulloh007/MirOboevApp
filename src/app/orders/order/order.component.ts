@@ -32,9 +32,42 @@ export class OrderComponent implements OnInit {
   serverPrinters: any[] = []
   showPrinterList: boolean = false
   printWithComment: boolean = false
+  isActionSheetOpen = false;
+
   currencies: any[] = [];
   delivery_status: any[] = []
-
+  selectedPrinter: any = {
+    printer: {},
+    printer_type: ''
+  }
+  public actionSheetButtons = [
+    {
+      text: 'Заказ клиента QR',
+      data: {
+        action: 'form_1',
+      },
+    },
+    {
+      text: 'Заказ клиента QR с мастером',
+      data: {
+        action: 'form_2',
+      },
+    },
+    {
+      text: 'Заказ клиента QR Safe',
+      data: {
+        action: 'form_3',
+      },
+    },
+    {
+      text: 'Отмена',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
+  
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
@@ -91,7 +124,7 @@ export class OrderComponent implements OnInit {
     })
   }
 
-  async printTest(printer: PrinterInterface) {
+  async printTest(printer: PrinterInterface, form_type?: string) {
     this.loaderSvr.showLoader = true
     this.orderService.getOrderFormWithParams(this.order.id, this.printWithComment).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
@@ -121,7 +154,7 @@ export class OrderComponent implements OnInit {
     })
   }
 
-  printOnServer(printer: any) {
+  printOnServer(printer: any, form_type?: string) {
     this.loaderSvr.showLoader = true
     this.printerSrv.PrintOrder({
       id: this.order.id,
@@ -166,6 +199,22 @@ export class OrderComponent implements OnInit {
     });
 
 
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
+    if(!isOpen) this.showPrinterList = false
+  }
+  printSelectedForm(event: any) {
+    // console.log(event.detail.data.action);
+    // console.log(this.selectedPrinter);
+    if (this.selectedPrinter.printer_type == 'ip_printer') {
+      this.printTest(this.selectedPrinter.printer, event.detail.data.action)
+    }else if(this.selectedPrinter.printer_type == 'server_printer') {
+      this.printOnServer(this.selectedPrinter.printer, event.detail.data.action);
+    }
+    this.isActionSheetOpen = false;
+    this.showPrinterList = false
   }
 
 }

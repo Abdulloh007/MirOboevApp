@@ -32,7 +32,21 @@
             <ion-input placeholder="Склад" [disabled]="!filter.storageIn.isActive" [clearOnEdit]="true"
               (input)="searchStorageIn($event)" type="text" [(ngModel)]="filter.storageIn.name"></ion-input>
           </ion-item>
-          <ion-button (click)="onPeriodSegmentChange()" color="success" expand="block">Поиск</ion-button>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end" [(ngModel)]="filter.product.isActive">
+              Номенклатура</ion-checkbox>
+            <ion-input placeholder="" [disabled]="!filter.product.isActive" [clearOnEdit]="true"
+              (input)="searchProduct($event)" type="text" [(ngModel)]="filter.product.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox slot="start" labelPlacement="end" [(ngModel)]="filter.number.isActive">
+              Номер Заказа</ion-checkbox>
+            <ion-input placeholder="" [disabled]="!filter.number.isActive" [clearOnEdit]="true"
+              (input)="searchNumber($event)" type="text" [(ngModel)]="filter.number.name"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-button style="width: 100%;" (click)="onPeriodSegmentChange()" color="success" expand="block">Поиск</ion-button>
+          </ion-item>
         </ion-list>
 
         <div class="mo-data__options f1" *ngIf="subdivisionSearchResult.length > 0">
@@ -51,9 +65,20 @@
           <div (click)="setStorageIn(storage)" class="mo-do__item" *ngFor="let storage of storageInSearchResult">
             {{storage}}</div>
         </div>
+        <div class="mo-data__options f5" *ngIf="productSearchResult.length > 0">
+          <div (click)="setProduct(product.name)" class="mo-do__item" *ngFor="let product of productSearchResult">
+            {{product.name}}</div>
+        </div>
+        <div class="mo-data__options f6" *ngIf="numberSearchResult.length > 0">
+          <div (click)="setNumber(number.id)" class="mo-do__item" *ngFor="let number  of numberSearchResult">
+            {{number.link}}</div>
+        </div>
 
       </ion-col>
       <ion-segment scrollable="true" color="success" [(ngModel)]="segmentValue">
+        <ion-segment-button value="ect">
+          <ion-label>Все</ion-label>
+        </ion-segment-button>
         <ion-segment-button value="sends">
           <ion-label>Отправка</ion-label>
         </ion-segment-button>
@@ -65,9 +90,6 @@
         </ion-segment-button>
         <ion-segment-button value="recived">
           <ion-label>Полученные</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="ect">
-          <ion-label>Прочее</ion-label>
         </ion-segment-button>
       </ion-segment>
       <ion-refresher slot="fixed" (ionRefresh)="onPeriodSegmentChange()">

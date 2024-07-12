@@ -32,6 +32,16 @@ export class MovementOrdersService {
       }
     })
   }
+  
+  // findOrder(query: string) {
+  //   return this.http.get(this.hostControlSvr.defineHost() + '/f-movement/' + query, {
+  //     headers: {
+  //       'Content-Type': 'application/json, charset=utf-8',
+  //       'Accept': 'application/json',
+  //       'Authorization': 'Basic ' + localStorage.getItem('token')
+  //     }
+  //   })
+  // }
 
   createOrder(order: any) {
     return this.http.post(this.hostControlSvr.defineHost() + '/movements', JSON.stringify(order), {

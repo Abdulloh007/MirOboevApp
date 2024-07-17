@@ -417,6 +417,7 @@ export class CreateComponent implements OnInit {
 
   setMater(master: any) {
     this.order.master = master;
+    this.order.master_phone = master.phone;
     this.setMasterModal(false)
     this.masterSearchResult = []
   }

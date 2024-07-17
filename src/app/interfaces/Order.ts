@@ -11,6 +11,7 @@ export interface Order {
     discountSum: number;
     client?: any;
     master?: any;
+    master_phone?: string;
     currency: any;
     delivery: Delivery
 }

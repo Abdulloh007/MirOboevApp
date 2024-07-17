@@ -62,7 +62,7 @@ export class OrdersService {
   getOrderFormWithParams(id: string | number, getWithComment?: boolean, form_type?: string) {
     return this.http.post(this.hostControlSvr.defineHost() + '/get_order_document/' + id, {
       comment: getWithComment ? 1 : 0 ,
-      form: form_type || null
+      form: form_type
     }, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('token')

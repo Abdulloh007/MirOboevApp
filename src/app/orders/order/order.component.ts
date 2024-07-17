@@ -54,7 +54,7 @@ export class OrderComponent implements OnInit {
       },
     },
     {
-      text: 'Заказ клиента QR Safe',
+      text: 'Заказ клиента QR (Кухня, Зал, Детская)',
       data: {
         action: 'form_3',
       },
@@ -126,7 +126,7 @@ export class OrderComponent implements OnInit {
 
   async printTest(printer: PrinterInterface, form_type?: string) {
     this.loaderSvr.showLoader = true
-    this.orderService.getOrderFormWithParams(this.order.id, this.printWithComment).subscribe(async (res: any) => {
+    this.orderService.getOrderFormWithParams(this.order.id, this.printWithComment, form_type).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
         await Printer.printTest({ ...printer, value: res.file })
           .then((res: any) => this.toast.presentToast(res?.status), (err: any) => this.toast.presentToast(err?.status, 'danger'))
@@ -159,7 +159,8 @@ export class OrderComponent implements OnInit {
     this.printerSrv.PrintOrder({
       id: this.order.id,
       printer_id: printer.id,
-      quantity: 1
+      quantity: 1,
+      form: form_type
     }).subscribe(() => {
       this.loaderSvr.showLoader = false
       this.toast.presentToast("Печать запущена...")

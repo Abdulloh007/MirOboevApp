@@ -36,12 +36,20 @@
               {{ order.author }}
             </ion-label>
           </ion-item>
-          <ion-item>
+          <ion-item lines="none">
             <ion-label>
               Клиент
             </ion-label>
             <ion-label>
               {{ order.client?.name }}
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Клиент Номер
+            </ion-label>
+            <ion-label>
+              {{ order.delivery.reciver_phone }}
             </ion-label>
           </ion-item>
           <ion-item lines="none">
@@ -50,6 +58,14 @@
             </ion-label>
             <ion-label>
               {{ order.master?.name }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Мастер Номер
+            </ion-label>
+            <ion-label>
+              {{ order.master?.phone }}
             </ion-label>
           </ion-item>
         </ion-list>

@@ -10,11 +10,54 @@
       <!-- <ion-segment-button value="last_month">
         <ion-label>Прошлый Месяц</ion-label>
       </ion-segment-button> -->
+      <ion-segment-button *ngIf="userRole.degree < 3" value="custom">
+        <ion-label>Период</ion-label>
+      </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
+<div class="mo-auth__layout" *ngIf="!isPemited">
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Логин</ion-label>
+      <ion-input type="text" autofocus="true" [(ngModel)]="login"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Пароль</ion-label>
+      <ion-input type="password" [(ngModel)]="password" (keyup.enter)="loginUser($event)"></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-button color="success" class="auth__btn" expand="block" (click)="loginUser()">Войти</ion-button>
+    </ion-item>
+  </ion-list>
+</div>
+
 <ion-content [fullscreen]="true">
+  <ion-row padding *ngIf="segmentValue === 'custom' && userRole.degree < 3">
+    <ion-col size="12">
+      <ion-list lines="full">
+        <ion-item>
+          <ion-datetime-button datetime="datetime1"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-datetime-button datetime="datetime2"></ion-datetime-button>
+        </ion-item>
+        <ion-button  expand="block" color="success" (click)="getCustomPeriod()">Получить</ion-button>
+        
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [(ngModel)]="date1" id="datetime1"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [(ngModel)]="date2" id="datetime2"></ion-datetime>
+    </ng-template>
+  </ion-modal>
   <ion-segment [(ngModel)]="showBy">
     <ion-segment-button value="prods">
       <ion-label>По позициям</ion-label>
@@ -34,7 +77,8 @@
     </ion-item>
     <ion-item lines="none">
       <ion-label>Итого</ion-label>
-      <ion-text color="success" slot="end">{{ results.products_total }} {{ results.products[0] ? results.products[0].currency.name : '' }}</ion-text>
+      <ion-text color="success" slot="end">{{ results.products_total }} {{ results.products[0] ?
+        results.products[0].currency.name : '' }}</ion-text>
     </ion-item>
   </ion-list>
   <ion-list *ngIf="showBy == 'docs'">
@@ -45,7 +89,8 @@
     </ion-item>
     <ion-item lines="none">
       <ion-label>Итого</ion-label>
-      <ion-text color="success" slot="end">{{ results.docs_total }} {{ results.docs[0] ? results.docs[0].currency.name : '' }}</ion-text>
+      <ion-text color="success" slot="end">{{ results.docs_total }} {{ results.docs[0] ? results.docs[0].currency.name :
+        '' }}</ion-text>
     </ion-item>
   </ion-list>
 </ion-content>

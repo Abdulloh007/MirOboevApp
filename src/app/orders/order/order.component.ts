@@ -60,6 +60,12 @@ export class OrderComponent implements OnInit {
       },
     },
     {
+      text: 'Заказ клиента QR - Склад',
+      data: {
+        action: 'form_4',
+      },
+    },
+    {
       text: 'Отмена',
       role: 'cancel',
       data: {

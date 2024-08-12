@@ -1,0 +1,21 @@
+.mo-row__wrap {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+
+    & > .mo-col {
+        display: block;
+        
+        &:first-child {
+            width: 30%;
+            border-right: 1px solid;
+        }
+
+        &:last-child {
+            padding-left: 5%;
+            width: 65%;
+        }
+    }
+}

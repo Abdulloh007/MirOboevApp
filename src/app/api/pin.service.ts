@@ -5,15 +5,15 @@ import { HostControlService } from './host-control.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ResultsService {
+export class PinService {
 
   constructor(
     private http: HttpClient,
     private hostControlSvr: HostControlService
   ) { }
 
-  getResults(period: string) {
-    return this.http.get(this.hostControlSvr.defineHost() + '/results/' + period, {
+  setPin(pin: string) {
+    return this.http.post(this.hostControlSvr.defineHost() + '/set-pin', { pin }, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
@@ -21,12 +21,9 @@ export class ResultsService {
       }
     })
   } 
-
-  getResultsCustomPeriod(period: string, date1: string, date2: string) {
-    return this.http.post(this.hostControlSvr.defineHost() + '/results/' + period, {
-      date1,
-      date2
-    }, {
+  
+  checkPin(pin: string) {
+    return this.http.put(this.hostControlSvr.defineHost() + '/set-pin', { pin }, {
       headers: {
         'Content-Type': 'application/json, charset=utf-8',
         'Accept': 'application/json',
@@ -34,5 +31,4 @@ export class ResultsService {
       }
     })
   } 
-
 }

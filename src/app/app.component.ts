@@ -10,6 +10,7 @@ import { PushNotifyService } from './api/push-notify.service';
 import { Capacitor } from '@capacitor/core';
 import { PrintersService } from './api/printers.service';
 import { ToastService } from './api/toast.service';
+import { PinService } from './api/pin.service';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,13 @@ export class AppComponent implements OnInit{
     degree: 99999
   }
 
+  password: string = ''
+  Accessed: boolean = sessionStorage.getItem('accessed') === 'ok'
+  hasToken: boolean = !!localStorage.getItem('token')
+  
   constructor(
     private router: Router,
+    private pinSrv: PinService,
     public loaderSvr: LoaderService,
     private appSrv: AppService,
     private checkSecSrv: CheckPermissionService,
@@ -73,4 +79,26 @@ export class AppComponent implements OnInit{
 
     this.checkSecSrv.sendLocation(coordinates.coords).subscribe()
   };
+
+  addChar(char: string | number) {
+    if (this.password.length < 6) {
+      this.password = this.password + char
+    }
+    if (this.password.length == 6) {
+      this.pinSrv.checkPin(this.password).subscribe((res: any) => {
+        if (res.status) {
+          this.Accessed = true
+          sessionStorage.setItem('accessed', 'ok')
+        }else {
+          this.toast.presentToast('Неверный ПИН', 'danger')
+        }
+        this.password = ''
+      })
+    } 
+  }
+
+  removeChar() {
+    this.password = this.password.slice(0, this.password.length - 1)
+  }
+
 }

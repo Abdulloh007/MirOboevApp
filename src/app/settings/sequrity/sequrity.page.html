@@ -3,27 +3,18 @@
     <ion-buttons slot="start">
       <ion-back-button default-href="#"></ion-back-button>
     </ion-buttons>
-    <ion-title>Настройки</ion-title>
+    <ion-title>Безопасность</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-grid>
     <ion-row>
       <ion-col size="12">
         <ion-list lines="full">
-          <ion-item routerLink="printers">Принтеры </ion-item>
-          <ion-item routerLink="sequrity">Безопасность </ion-item>
+          <ion-item routerLink="/settings/sequrity-set-pin">Установить ПИН</ion-item>
         </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
-
-<app-tabbbar></app-tabbbar>

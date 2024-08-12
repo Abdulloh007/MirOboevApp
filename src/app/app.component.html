@@ -20,6 +20,37 @@
     </ion-content>
   </ion-menu>
 
+  <div class="mo-passrequest__layout" *ngIf="!Accessed && hasToken">
+    <div class="mo-row">
+      <div class="mo-logo"></div>
+      <h4 class="mo-heading">Код доступа</h4>
+      <div class="mo-pass__dots">
+        <div class="dot" [ngClass]="{filled: password.length > 0, loading: password.length == 6}"></div>
+        <div class="dot" [ngClass]="{filled: password.length > 1, loading: password.length == 6}"></div>
+        <div class="dot" [ngClass]="{filled: password.length > 2, loading: password.length == 6}"></div>
+        <div class="dot" [ngClass]="{filled: password.length > 3, loading: password.length == 6}"></div>
+        <div class="dot" [ngClass]="{filled: password.length > 4, loading: password.length == 6}"></div>
+        <div class="dot" [ngClass]="{filled: password.length > 5, loading: password.length == 6}"></div>
+      </div>
+      <div class="mo-keys">
+        <div (click)="addChar(1)" class="key">1</div>
+        <div (click)="addChar(2)" class="key">2</div>
+        <div (click)="addChar(3)" class="key">3</div>
+        <div (click)="addChar(4)" class="key">4</div>
+        <div (click)="addChar(5)" class="key">5</div>
+        <div (click)="addChar(6)" class="key">6</div>
+        <div (click)="addChar(7)" class="key">7</div>
+        <div (click)="addChar(8)" class="key">8</div>
+        <div (click)="addChar(9)" class="key">9</div>
+        <div class="key reset">Забыл ПИН</div>
+        <div (click)="addChar(0)" class="key">0</div>
+        <div (click)="removeChar()" class="key">
+          <ion-icon name="arrow-back"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <ion-router-outlet id="main-content"></ion-router-outlet>
 
   <div class="mo-global__loader__wrap" [ngClass]="{show: this.loaderSvr.showLoader }">

@@ -91,7 +91,7 @@
     background-color: var(--ion-background-color, #333);
 }
 
-.mo-row {
+.mo-row:not(.mo-prod__row) {
     padding: 60px 15px;
     width: 100%;
     height: 100%;
@@ -120,7 +120,7 @@
 .dot {
     width: 10px;
     height: 10px;
-    background-color: var(--ion-color-step-250, #333);
+    background-color: var(--ion-color-step-650, #333);
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -134,7 +134,7 @@
     -o-transition: all .5s ease;
 
     &.filled{
-        background-color: var(--ion-color-step-100, #000);
+        background-color: var(--ion-color-success-shade, #000);
     }
 
     &.loading {

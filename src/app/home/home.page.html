@@ -83,16 +83,16 @@
           Узнать остатки
         </ion-button>
       </ion-col>
-      <ion-col size="12">
+      <ion-col size="12" *ngIf="userRole.degree < 5">
         <h2>Мониторинг</h2>
       </ion-col>
-      <ion-col size="12">
+      <ion-col size="12" *ngIf="userRole.degree < 5">
         <ion-button color="success" expand="block" routerLink="/orders/monitoring">
           <ion-icon slot="start" name="car"></ion-icon>
           Доставка
         </ion-button>
       </ion-col>
-      <ion-col size="12" style="margin-bottom: 60px;">
+      <ion-col size="12" style="margin-bottom: 60px;" *ngIf="userRole.degree < 5">
         <ion-button color="success" expand="block" routerLink="/move-orders/monitoring">
           <ion-icon slot="start" name="cube"></ion-icon>
           Перемещение

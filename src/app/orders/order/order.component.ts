@@ -110,6 +110,8 @@ export class OrderComponent implements OnInit {
     this.loaderSvr.showLoader = true
     this.orderService.getOrderForm(this.order.id).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
+        console.log(Printer);
+        
         await Printer.print({ value: res.file });
       }
       else {
@@ -134,6 +136,8 @@ export class OrderComponent implements OnInit {
     this.loaderSvr.showLoader = true
     this.orderService.getOrderFormWithParams(this.order.id, this.printWithComment, form_type).subscribe(async (res: any) => {
       if (Capacitor.isNativePlatform()) {
+                console.log(Printer);
+        
         await Printer.printTest({ ...printer, value: res.file })
           .then((res: any) => this.toast.presentToast(res?.status), (err: any) => this.toast.presentToast(err?.status, 'danger'))
           .catch((err: any) => this.toast.presentToast(err?.status, 'danger'))
